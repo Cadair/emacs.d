@@ -174,7 +174,7 @@ Notes:
     (evil-set-initial-state 'org-agenda-mode 'normal)  ;; Use normal mode (not emacs) in agenda
     :custom ;; Customization of package custom variables
     (evil-want-keybinding nil)    ;; Disable evil bindings in other modes (It's not consistent and not good)
-    (evil-want-C-u-scroll t)      ;; Set C-u to scroll up
+    (evil-want-C-u-scroll nil)    ;; Do not set C-u to scroll up
     (evil-want-C-i-jump nil)      ;; Disables C-i jump
     (evil-undo-system 'undo-redo) ;; C-r to redo
     (org-return-follows-link t)   ;; Sets RETURN key in org-mode to follow links
@@ -1228,6 +1228,12 @@ A bunch of language specific key binds, using ~,~ as the leader key.
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
 #+end_src
+
+*** nix
+    #+begin_src emacs-lisp
+(use-package nix-ts-mode
+ :mode "\\.nix\\'")
+    #+end_src
 
 * Other Packages
 All the package setups that don't need much tweaking.

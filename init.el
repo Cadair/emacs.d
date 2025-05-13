@@ -45,7 +45,7 @@
   (evil-set-initial-state 'org-agenda-mode 'normal)  ;; Use normal mode (not emacs) in agenda
   :custom ;; Customization of package custom variables
   (evil-want-keybinding nil)    ;; Disable evil bindings in other modes (It's not consistent and not good)
-  (evil-want-C-u-scroll t)      ;; Set C-u to scroll up
+  (evil-want-C-u-scroll nil)    ;; Do not set C-u to scroll up
   (evil-want-C-i-jump nil)      ;; Disables C-i jump
   (evil-undo-system 'undo-redo) ;; C-r to redo
   (org-return-follows-link t)   ;; Sets RETURN key in org-mode to follow links
@@ -936,6 +936,9 @@ falling back on searching your PATH."
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
+
+(use-package nix-ts-mode
+ :mode "\\.nix\\'")
 
 (use-package magit
   :commands magit-status)
