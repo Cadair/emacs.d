@@ -115,7 +115,7 @@ in {
       Service = {
         Type = "simple";
         ExecStartPre = "${pkgs.coreutils.out}/bin/sleep 10";
-        ExecStart = ''${cfg.emacs-package.out}/bin/emacsclient -c -F "((title . \"emacs-todo\") (name . \"emacs-todo\") (height . 60) (width . 190))" --eval '(org-agenda)' '';
+        ExecStart = ''${cfg.emacs-package.out}/bin/emacsclient -c -F "((title . \"emacs-todo\") (name . \"emacs-todo\") (height . 60) (width . 190))" --eval '(org-agenda nil "p")' '';
         Restart = "on-failure";
       };
 
