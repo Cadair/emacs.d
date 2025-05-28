@@ -14,7 +14,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       fira-code
-      fira-code-nerdfont
+      nerd-fonts.fira-code
       fira-code-symbols
       git
       ripgrep

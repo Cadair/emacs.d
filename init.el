@@ -72,6 +72,7 @@
    :states '(normal visual motion emacs)
    "K" 'scroll-down-command
    "J" 'scroll-up-command
+   ;; "<escape>" 'keyboard-quit
    )
 
   ;; Mode Specific Keybinds
@@ -82,6 +83,13 @@
 
    "<up>" 'comint-previous-input
    "<down>" 'comint-next-input
+  )
+  
+  (general-define-key
+   :keymaps 'compilation-mode-map
+   :states 'motion
+
+   "<escape>" 'quit-window
   )
 
   ;; Set up a local-leader used for language mode specific functionality
