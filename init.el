@@ -438,8 +438,6 @@
 (use-package nerd-icons
   :if (display-graphic-p)
   :demand t
-  :custom
-  (nerd-icons-font-family "Fira Code Nerd Font")
   )
 
 (use-package nerd-icons-dired
