@@ -291,9 +291,9 @@
     "p b" '(project-switch-to-buffer :wk "Switch to project buffer")
     "p s" '(project-shell :wk "Run shell in project")
     "p d" '(project-find-dir :wk "Find directory")
-    "p D" '(project-dired :wk "Dired")
-    "p v" '(project-vc-dir :wk "Run VC-Dir")
-    "p c" '(project-compile :wk "Compile Project")
+    "p D" '(project-dired :Wk "Dired")
+    "P V" '(Project-Vc-Dir :Wk "Run Vc-Dir")
+    "P C" '(project-compile :wk "Compile Project")
     "p e" '(project-eshell :wk "Run Shell")
     "p k" '(project-kill-buffers :wk "Kill all buffers")
     "p p" '(tabspaces-open-or-create-project-and-workspace :wk "Switch Tabspaces")
@@ -946,6 +946,17 @@ falling back on searching your PATH."
 (use-package nix-ts-mode
  :mode "\\.nix\\'")
 
+(use-package quarto-mode)
+
+(my-local-leader
+  :states 'normal
+  :keymaps 'poly-quarto-polymode-map
+  "m a" 'micromamba-activate
+  "m d" 'micromamba-deactivate
+  "v a" 'pyvenv-workon
+  "v d" 'pyvenv-deactivate
+  )
+
 (use-package magit
   :commands magit-status)
 (use-package forge
@@ -1213,6 +1224,11 @@ falling back on searching your PATH."
           markdown-mode
           rst-mode
           yaml-ts-mode) . indent-bars-mode))
+
+(use-package eat
+  :custom
+  (eat-shell "/home/stuart/.nix-profile/bin/xonsh")
+  )
 
 (use-package org
   :defer t

@@ -70,6 +70,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#jinx---better-spell-check][jinx - better spell check?]]
   - [[#evil-nerd-commenter][Evil-nerd-commenter]]
   - [[#indent-guides][Indent guides]]
+  - [[#eat---terminal][EAT - Terminal]]
 - [[#org-mode][Org Mode]]
   - [[#visuals][Visuals]]
   - [[#vertico-fixes][Vertico Fixes]]
@@ -424,9 +425,9 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "p b" '(project-switch-to-buffer :wk "Switch to project buffer")
     "p s" '(project-shell :wk "Run shell in project")
     "p d" '(project-find-dir :wk "Find directory")
-    "p D" '(project-dired :wk "Dired")
-    "p v" '(project-vc-dir :wk "Run VC-Dir")
-    "p c" '(project-compile :wk "Compile Project")
+    "p D" '(project-dired :Wk "Dired")
+    "P V" '(Project-Vc-Dir :Wk "Run Vc-Dir")
+    "P C" '(project-compile :wk "Compile Project")
     "p e" '(project-eshell :wk "Run Shell")
     "p k" '(project-kill-buffers :wk "Kill all buffers")
     "p p" '(tabspaces-open-or-create-project-and-workspace :wk "Switch Tabspaces")
@@ -1241,6 +1242,21 @@ A bunch of language specific key binds, using ~,~ as the leader key.
  :mode "\\.nix\\'")
     #+end_src
 
+*** Quarto
+    #+begin_src emacs-lisp
+  (use-package quarto-mode)
+    #+end_src
+
+#+begin_src emacs-lisp
+(my-local-leader
+  :states 'normal
+  :keymaps 'poly-quarto-polymode-map
+  "m a" 'micromamba-activate
+  "m d" 'micromamba-deactivate
+  "v a" 'pyvenv-workon
+  "v d" 'pyvenv-deactivate
+  )
+#+end_src
 * Other Packages
 All the package setups that don't need much tweaking.
 
@@ -1624,6 +1640,14 @@ https://github.com/minad/jinx
           yaml-ts-mode) . indent-bars-mode))
    #+end_src
 
+** EAT - Terminal
+
+#+begin_src emacs-lisp
+(use-package eat
+  :custom
+  (eat-shell "/home/stuart/.nix-profile/bin/xonsh")
+  )
+#+end_src
 * Org Mode
 
 Orgy orgy org mode.
