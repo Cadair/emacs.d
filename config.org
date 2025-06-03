@@ -36,6 +36,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#ediff][EDiff]]
   - [[#nix-environment-hackery][nix environment hackery]]
   - [[#window-management][Window management]]
+  - [[#compilation-mode][Compilation Mode]]
 - [[#appearance][Appearance]]
   - [[#set-theme][Set Theme]]
   - [[#transparency][Transparency]]
@@ -423,11 +424,11 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "p f" '(project-find-file :wk "Find file")
     "p F" '(project-or-external-find-file :wk "Find file in project or external roots")
     "p b" '(project-switch-to-buffer :wk "Switch to project buffer")
-    "p s" '(project-shell :wk "Run shell in project")
+    "p s" '(eat-project-other-window :wk "Run shell in project")
     "p d" '(project-find-dir :wk "Find directory")
     "p D" '(project-dired :Wk "Dired")
-    "P V" '(Project-Vc-Dir :Wk "Run Vc-Dir")
-    "P C" '(project-compile :wk "Compile Project")
+    "P v" '(Project-Vc-Dir :Wk "Run Vc-Dir")
+    "P c" '(project-compile :wk "Compile Project")
     "p e" '(project-eshell :wk "Run Shell")
     "p k" '(project-kill-buffers :wk "Kill all buffers")
     "p p" '(tabspaces-open-or-create-project-and-workspace :wk "Switch Tabspaces")
@@ -449,7 +450,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
 
   (start/leader-keys
     "s" '(:ignore t :wk "Show / Spell")
-    "s e" '(eat :wk "Eat terminal")
+    "s e" '(eat-other-window :wk "Eat terminal")
     "s k" '(browse-kill-ring :wk "Show kill-ring")
     "s c" '(flyspell-correct-word-before-point :wk "Correct word at point")
     "s s" '(flyspell-toggle :wk "Toggle flyspell")
@@ -569,6 +570,14 @@ This is based off reading this tutorial: https://www.masteringemacs.org/article/
   (set-window-dedicated-p (selected-window)
      (not (window-dedicated-p (selected-window)))))
 #+end_src
+
+** Compilation Mode
+
+   Enable colour in compilation buffers.
+   #+begin_src emacs-lisp
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+   #+end_src
+
 * Appearance
 ** Set Theme
 My themes and fonts are set in my home-manager config so that they match the whole system.
@@ -1153,7 +1162,7 @@ falling back on searching your PATH."
   (interactive)
   (setq initial-buffer (current-buffer))
   (if (python-shell-get-buffer)
-      (kill-process (get-buffer-process (python-shell-get-buffer))))
+	  (kill-process (get-buffer-process (python-shell-get-buffer))))
   (sleep-for 0.5)
   (+python/open-ipython-repl)
   (evil-normal-state)
@@ -1185,13 +1194,13 @@ falling back on searching your PATH."
                                  (shell-quote-argument (file-name-nondirectory buffer-file-name)))))
     (if arg
         (call-interactively 'compile)
-      (compile compile-command t)
-      (with-current-buffer (get-buffer "*compilation*")
+	  (compile compile-command t)
+	  (with-current-buffer (get-buffer "*compilation*")
         (inferior-python-mode)))))
 
 ;; Always scroll to the end in a python shell
 (add-hook 'inferior-python-mode-hook
-          (lambda ()
+		  (lambda ()
             (setq comint-move-point-for-output t)))
 #+end_src
 
@@ -1645,7 +1654,7 @@ https://github.com/minad/jinx
 #+begin_src emacs-lisp
 (use-package eat
   :custom
-  (eat-shell "/home/stuart/.nix-profile/bin/xonsh")
+  (shell-file-name "xonsh")
   )
 #+end_src
 * Org Mode

@@ -289,11 +289,11 @@
     "p f" '(project-find-file :wk "Find file")
     "p F" '(project-or-external-find-file :wk "Find file in project or external roots")
     "p b" '(project-switch-to-buffer :wk "Switch to project buffer")
-    "p s" '(project-shell :wk "Run shell in project")
+    "p s" '(eat-project-other-window :wk "Run shell in project")
     "p d" '(project-find-dir :wk "Find directory")
     "p D" '(project-dired :Wk "Dired")
-    "P V" '(Project-Vc-Dir :Wk "Run Vc-Dir")
-    "P C" '(project-compile :wk "Compile Project")
+    "P v" '(Project-Vc-Dir :Wk "Run Vc-Dir")
+    "P c" '(project-compile :wk "Compile Project")
     "p e" '(project-eshell :wk "Run Shell")
     "p k" '(project-kill-buffers :wk "Kill all buffers")
     "p p" '(tabspaces-open-or-create-project-and-workspace :wk "Switch Tabspaces")
@@ -315,7 +315,7 @@
 
   (start/leader-keys
     "s" '(:ignore t :wk "Show / Spell")
-    "s e" '(eat :wk "Eat terminal")
+    "s e" '(eat-other-window :wk "Eat terminal")
     "s k" '(browse-kill-ring :wk "Show kill-ring")
     "s c" '(flyspell-correct-word-before-point :wk "Correct word at point")
     "s s" '(flyspell-toggle :wk "Toggle flyspell")
@@ -412,6 +412,8 @@
   (interactive)
   (set-window-dedicated-p (selected-window)
      (not (window-dedicated-p (selected-window)))))
+
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 ;;  (use-package gruvbox-theme
 ;;    :config
@@ -871,7 +873,7 @@ falling back on searching your PATH."
   (interactive)
   (setq initial-buffer (current-buffer))
   (if (python-shell-get-buffer)
-      (kill-process (get-buffer-process (python-shell-get-buffer))))
+	  (kill-process (get-buffer-process (python-shell-get-buffer))))
   (sleep-for 0.5)
   (+python/open-ipython-repl)
   (evil-normal-state)
@@ -903,13 +905,13 @@ falling back on searching your PATH."
                                  (shell-quote-argument (file-name-nondirectory buffer-file-name)))))
     (if arg
         (call-interactively 'compile)
-      (compile compile-command t)
-      (with-current-buffer (get-buffer "*compilation*")
+	  (compile compile-command t)
+	  (with-current-buffer (get-buffer "*compilation*")
         (inferior-python-mode)))))
 
 ;; Always scroll to the end in a python shell
 (add-hook 'inferior-python-mode-hook
-          (lambda ()
+		  (lambda ()
             (setq comint-move-point-for-output t)))
 
 (my-local-leader
@@ -1227,7 +1229,7 @@ falling back on searching your PATH."
 
 (use-package eat
   :custom
-  (eat-shell "/home/stuart/.nix-profile/bin/xonsh")
+  (shell-file-name "xonsh")
   )
 
 (use-package org
