@@ -292,8 +292,8 @@
     "p s" '(eat-project-other-window :wk "Run shell in project")
     "p d" '(project-find-dir :wk "Find directory")
     "p D" '(project-dired :Wk "Dired")
-    "P v" '(Project-Vc-Dir :Wk "Run Vc-Dir")
-    "P c" '(project-compile :wk "Compile Project")
+    "p v" '(project-vc-dir :Wk "Run Vc-Dir")
+    "p c" '(project-compile :wk "Compile Project")
     "p e" '(project-eshell :wk "Run Shell")
     "p k" '(project-kill-buffers :wk "Kill all buffers")
     "p p" '(tabspaces-open-or-create-project-and-workspace :wk "Switch Tabspaces")
@@ -944,6 +944,7 @@ falling back on searching your PATH."
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.asdf\\'" . yaml-ts-mode))
 
 (use-package nix-ts-mode
  :mode "\\.nix\\'")
