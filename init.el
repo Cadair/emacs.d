@@ -960,6 +960,11 @@ falling back on searching your PATH."
   "v d" 'pyvenv-deactivate
   )
 
+(define-derived-mode xonsh-mode python-ts-mode "xonsh" "Major mode for xonsh")
+(add-hook 'xonsh-mode-hook (lambda () (flymake-mode 0)))
+(add-to-list 'auto-mode-alist '("\\.xsh\\'" . xonsh-mode))
+(add-to-list 'auto-mode-alist '("\\.xonshrc\\'" . xonsh-mode))
+
 (use-package magit
   :commands magit-status)
 (use-package forge

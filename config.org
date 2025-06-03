@@ -1267,6 +1267,17 @@ A bunch of language specific key binds, using ~,~ as the leader key.
   "v d" 'pyvenv-deactivate
   )
 #+end_src
+
+
+*** xonsh
+
+#+begin_src emacs-lisp
+(define-derived-mode xonsh-mode python-ts-mode "xonsh" "Major mode for xonsh")
+(add-hook 'xonsh-mode-hook (lambda () (flymake-mode 0)))
+(add-to-list 'auto-mode-alist '("\\.xsh\\'" . xonsh-mode))
+(add-to-list 'auto-mode-alist '("\\.xonshrc\\'" . xonsh-mode))
+#+end_src
+
 * Other Packages
 All the package setups that don't need much tweaking.
 
