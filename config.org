@@ -52,6 +52,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#language-server][Language Server]]
   - [[#dape][dape]]
   - [[#yasnippet][Yasnippet]]
+  - [[#code-folding][Code Folding]]
   - [[#language-modes][Language modes]]
 - [[#other-packages][Other Packages]]
   - [[#git][Git]]
@@ -145,21 +146,21 @@ With Emacs 29 use-package is now built-in.
 
 *** Straight
 #+begin_src emacs-lisp
-;;(defvar bootstrap-version)
-;;(let ((bootstrap-file
-;;       (expand-file-name
-;;        "straight/repos/straight.el/bootstrap.el"
-;;        (or (bound-and-true-p straight-base-dir)
-;;            user-emacs-directory)))
-;;      (bootstrap-version 7))
-;;  (unless (file-exists-p bootstrap-file)
-;;    (with-current-buffer
-;;        (url-retrieve-synchronously
-;;         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-;;         'silent 'inhibit-cookies)
-;;      (goto-char (point-max))
-;;      (eval-print-last-sexp)))
-;;  (load bootstrap-file nil 'nomessage))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name
+       "straight/repos/straight.el/bootstrap.el"
+       (or (bound-and-true-p straight-base-dir)
+           user-emacs-directory)))
+     (bootstrap-version 7))
+ (unless (file-exists-p bootstrap-file)
+   (with-current-buffer
+       (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+     (goto-char (point-max))
+     (eval-print-last-sexp)))
+ (load bootstrap-file nil 'nomessage))
 #+end_src
 
 ** Evil Mode
@@ -509,8 +510,9 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
 
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
-  :hook
-  (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+  ;; :hook
+  ;; replaced by treesit-fold for now
+  ;; (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -986,6 +988,23 @@ To use it write out the full keyword (or use autocompletion) and press Tab.
    )
   )
 #+end_src
+
+** Code Folding
+
+   We want to use tree-sitter for folding where possible.
+   #+begin_src emacs-lisp
+    (use-package treesit-fold
+      :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+      :custom
+      (global-treesit-fold-mode t)
+      (global-treesit-fold-indicators-mode nil)
+      (treesit-fold-summary-show t)
+      (treesit-fold-summary-max-length 100)
+   )
+   #+end_src
+
+treesit-fold adds itself to the [[help:evil-fold-list][evil-fold-list]] which lets us use the existing evil ~z~ shortcuts for the folding.
+
 
 ** Language modes
 I am using tree-sitter, with the Language grammars installed by nixos.
@@ -2018,6 +2037,7 @@ Org-Agenda
    ;; Some general config
    (setq org-duration-format 'h:mm)
    (setq org-cycle-separator-lines -1)
+   (setq org-clock-out-remove-zero-time-clock t)
 
    ;; Always save buffers on clock changes
    (add-hook 'org-clock-in-hook #'save-buffer)

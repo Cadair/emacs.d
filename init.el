@@ -21,21 +21,21 @@
 ;;(use-package quelpa)
 ;;(use-package quelpa-use-package)
 
-;;(defvar bootstrap-version)
-;;(let ((bootstrap-file
-;;       (expand-file-name
-;;        "straight/repos/straight.el/bootstrap.el"
-;;        (or (bound-and-true-p straight-base-dir)
-;;            user-emacs-directory)))
-;;      (bootstrap-version 7))
-;;  (unless (file-exists-p bootstrap-file)
-;;    (with-current-buffer
-;;        (url-retrieve-synchronously
-;;         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-;;         'silent 'inhibit-cookies)
-;;      (goto-char (point-max))
-;;      (eval-print-last-sexp)))
-;;  (load bootstrap-file nil 'nomessage))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name
+       "straight/repos/straight.el/bootstrap.el"
+       (or (bound-and-true-p straight-base-dir)
+           user-emacs-directory)))
+     (bootstrap-version 7))
+ (unless (file-exists-p bootstrap-file)
+   (with-current-buffer
+       (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+     (goto-char (point-max))
+     (eval-print-last-sexp)))
+ (load bootstrap-file nil 'nomessage))
 
 (use-package evil
   :init ;; Execute code Before a package is loaded
@@ -371,8 +371,9 @@
 
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
-  :hook
-  (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+  ;; :hook
+  ;; replaced by treesit-fold for now
+  ;; (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -731,6 +732,15 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
      )
    )
   )
+
+(use-package treesit-fold
+   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+   :custom
+   (global-treesit-fold-mode t)
+   (global-treesit-fold-indicators-mode nil)
+   (treesit-fold-summary-show t)
+   (treesit-fold-summary-max-length 100)
+)
 
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)))
@@ -1493,6 +1503,7 @@ falling back on searching your PATH."
 ;; Some general config
 (setq org-duration-format 'h:mm)
 (setq org-cycle-separator-lines -1)
+(setq org-clock-out-remove-zero-time-clock t)
 
 ;; Always save buffers on clock changes
 (add-hook 'org-clock-in-hook #'save-buffer)
