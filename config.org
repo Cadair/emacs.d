@@ -1835,6 +1835,24 @@ https://github.com/minad/org-modern
   )
 #+end_src
 
+****  org-babel
+
+     #+begin_src emacs-lisp
+     (org-babel-do-load-languages 'org-babel-load-languages
+     							 '((python . t)
+     							   (emacs-lisp . t)
+     							   (org . t)
+     							   ))
+     #+end_src
+
+#+begin_src emacs-lisp
+(use-package htmlize)
+#+end_src
+**** org-mode presentations
+     #+begin_src emacs-lisp
+    (use-package ox-reveal)
+     #+end_src
+
 **** TODO More things from here:  https://github.com/jakebox/jake-emacs?tab=readme-ov-file#org-mode
 
 ** Keybindings

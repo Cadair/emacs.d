@@ -1319,6 +1319,16 @@ falling back on searching your PATH."
   (org-mode-hook . org-modern-mode)
   )
 
+(org-babel-do-load-languages 'org-babel-load-languages
+							 '((python . t)
+							   (emacs-lisp . t)
+							   (org . t)
+							   ))
+
+(use-package htmlize)
+
+(use-package ox-reveal)
+
 (my-local-leader
   :states '(normal visual)
   :keymaps 'org-mode-map
