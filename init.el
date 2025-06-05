@@ -1349,7 +1349,6 @@ falling back on searching your PATH."
   "e" 'org-export-dispatch
   "f" 'org-footnote-action
   "h" 'org-toggle-heading
-  "i" 'org-toggle-item
   "I" 'org-id-get-create
   ;; "K" #'+org/remove-result-blocks
   "n" 'org-store-link
@@ -1430,6 +1429,8 @@ falling back on searching your PATH."
   "g r" 'org-refile-goto-last-stored
   ;; "g v" #'+org/goto-visible
   "g x" 'org-capture-goto-last-stored
+  "i" '(:ignore t :wk "Insert")
+  "i b" 'org-insert-structure-template
   "l" '(:ignore t :wk "links")
   "l c" 'org-cliplink
   ;; "l d" #'+org/remove-link
