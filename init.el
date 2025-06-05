@@ -1319,6 +1319,7 @@ falling back on searching your PATH."
   (org-mode-hook . org-modern-mode)
   )
 
+(setq org-confirm-babel-evaluate nil)
 (org-babel-do-load-languages 'org-babel-load-languages
 							 '((python . t)
 							   (emacs-lisp . t)
@@ -1350,11 +1351,14 @@ falling back on searching your PATH."
   "h" 'org-toggle-heading
   "i" 'org-toggle-item
   "I" 'org-id-get-create
-  "k" 'org-babel-remove-result
   ;; "K" #'+org/remove-result-blocks
   "n" 'org-store-link
   "o" 'org-set-property
   "q" 'org-set-tags-command
+  "r" '(:ignore t :wk "Org Babel")
+  "r b" 'org-babel-execute-buffer
+  "r e" 'org-babel-execute-maybe
+  "r k" 'org-babel-remove-result
   "t" 'org-todo
   "T" 'org-todo-list
   "x" 'org-toggle-checkbox
