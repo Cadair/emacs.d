@@ -1327,7 +1327,9 @@ falling back on searching your PATH."
 
 (use-package htmlize)
 
-(use-package ox-reveal)
+(use-package ox-reveal
+  :vc (:url "https://github.com/Cadair/org-reveal.git"
+       :rev "master"))
 
 (my-local-leader
   :states '(normal visual)

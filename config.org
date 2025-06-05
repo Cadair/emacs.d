@@ -1850,7 +1850,9 @@ https://github.com/minad/org-modern
 #+end_src
 **** org-mode presentations
      #+begin_src emacs-lisp
-    (use-package ox-reveal)
+(use-package ox-reveal
+  :vc (:url "https://github.com/Cadair/org-reveal.git"
+       :rev "master"))
      #+end_src
 
 **** TODO More things from here:  https://github.com/jakebox/jake-emacs?tab=readme-ov-file#org-mode
