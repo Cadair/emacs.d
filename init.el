@@ -1324,6 +1324,7 @@ falling back on searching your PATH."
 							 '((python . t)
 							   (emacs-lisp . t)
 							   (org . t)
+							   (shell . t)
 							   ))
 
 (use-package htmlize)

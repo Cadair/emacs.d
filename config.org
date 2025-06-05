@@ -1843,6 +1843,7 @@ https://github.com/minad/org-modern
      							 '((python . t)
      							   (emacs-lisp . t)
      							   (org . t)
+     							   (shell . t)
      							   ))
      #+end_src
 
