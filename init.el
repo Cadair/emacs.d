@@ -59,7 +59,7 @@
 (use-package evil-collection
   :after evil
   :custom
-  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff))
+  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement))
   :config
   (evil-collection-init)
   )
@@ -126,6 +126,7 @@
   (start/leader-keys
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
+	"a e" '(cadair/ement-connect :wk "Matrix")
     )
 
   (start/leader-keys
@@ -725,6 +726,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (prog-mode . yas-minor-mode)
   (rst-mode . yas-minor-mode)
   (markdown-mode . yas-minor-mode)
+  (org-mode . yas-minor-mode)
   :custom
   (yas-snippet-dirs
    '("~/.emacs.d/snippets"                 ;; writeable snippets dir
@@ -741,6 +743,42 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
    (treesit-fold-summary-show t)
    (treesit-fold-summary-max-length 100)
 )
+
+(use-package combobulate
+  :vc (:url "https://github.com/mickeynp/combobulate.git"
+	   :rev "master")
+  :hook ((prog-mode . combobulate-mode)))
+
+(my-local-leader
+  :states 'normal
+  :keymaps 'combobulate-key-map
+  "o" 'evil-combobulate-state
+  )
+
+(evil-define-state combobulate
+  "Combobulate state"
+  :tag " <C> "
+  :enable (normal)
+  (message (if (evil-combobulate-state-p)
+               "Enabling combobulate state."
+             "Disabling combobulate state.")))
+
+;; Define the bindings for combobulate state
+(evil-define-key 'combobulate 'combobulate-key-map
+  ;; Combobulate
+  "o" 'combobulate
+  
+  ;; Linear navigation 
+  "w" 'combobulate-navigate-logical-next
+  "b" 'combobulate-navigate-logical-previous
+
+  ;; Tree Navigation (hjkl)
+  "h" 'combobulate-navigate-up
+  "j" 'combobulate-navigate-next
+  "k" 'combobulate-navigate-previous 
+  "l" 'combobulate-navigate-down
+
+  )
 
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)))
@@ -1808,6 +1846,13 @@ falling back on searching your PATH."
   :custom
   (org-clock-float-email (plist-get (nth 0 (auth-source-search :max 1 :host "api.float.com")) :user))
   (org-clock-float-api-token (auth-info-password (nth 0 (auth-source-search :max 1 :host "api.float.com"))))
+  )
+
+(use-package ement)
+
+(defun cadair/ement-connect ()
+  (interactive)
+  (ement-connect :user-id "@cadair:cadair.com" :uri-prefix "http://localhost:8009")
   )
 
 ;; Make gc pauses faster by decreasing the threshold.

@@ -53,6 +53,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#dape][dape]]
   - [[#yasnippet][Yasnippet]]
   - [[#code-folding][Code Folding]]
+  - [[#combobulate][Combobulate]]
   - [[#language-modes][Language modes]]
 - [[#other-packages][Other Packages]]
   - [[#git][Git]]
@@ -87,6 +88,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#agenda][Agenda]]
   - [[#waybar][Waybar]]
   - [[#org-clock-float][Org Clock Float]]
+- [[#matrix][Matrix]]
 - [[#runtime-performance][Runtime Performance]]
 
 * Important to load first
@@ -191,7 +193,7 @@ Notes:
   (use-package evil-collection
     :after evil
     :custom
-    (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff))
+    (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement))
     :config
     (evil-collection-init)
     )
@@ -262,6 +264,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
   (start/leader-keys
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
+	"a e" '(cadair/ement-connect :wk "Matrix")
     )
 
   (start/leader-keys
@@ -980,6 +983,7 @@ To use it write out the full keyword (or use autocompletion) and press Tab.
   (prog-mode . yas-minor-mode)
   (rst-mode . yas-minor-mode)
   (markdown-mode . yas-minor-mode)
+  (org-mode . yas-minor-mode)
   :custom
   (yas-snippet-dirs
    '("~/.emacs.d/snippets"                 ;; writeable snippets dir
@@ -1005,7 +1009,51 @@ To use it write out the full keyword (or use autocompletion) and press Tab.
 
 treesit-fold adds itself to the [[help:evil-fold-list][evil-fold-list]] which lets us use the existing evil ~z~ shortcuts for the folding.
 
+** Combobulate
 
+#+begin_src emacs-lisp
+(use-package combobulate
+  :vc (:url "https://github.com/mickeynp/combobulate.git"
+	   :rev "master")
+  :hook ((prog-mode . combobulate-mode)))
+#+end_src
+
+#+begin_src emacs-lisp
+(my-local-leader
+  :states 'normal
+  :keymaps 'combobulate-key-map
+  "o" 'evil-combobulate-state
+  )
+#+end_src
+
+
+Ok, here's an experiment with defining combobulate evil bindings. I'm going to make a combobulate state, where all the motion keys are combobulated.
+#+begin_src emacs-lisp
+(evil-define-state combobulate
+  "Combobulate state"
+  :tag " <C> "
+  :enable (normal)
+  (message (if (evil-combobulate-state-p)
+               "Enabling combobulate state."
+             "Disabling combobulate state.")))
+
+;; Define the bindings for combobulate state
+(evil-define-key 'combobulate 'combobulate-key-map
+  ;; Combobulate
+  "o" 'combobulate
+  
+  ;; Linear navigation 
+  "w" 'combobulate-navigate-logical-next
+  "b" 'combobulate-navigate-logical-previous
+
+  ;; Tree Navigation (hjkl)
+  "h" 'combobulate-navigate-up
+  "j" 'combobulate-navigate-next
+  "k" 'combobulate-navigate-previous 
+  "l" 'combobulate-navigate-down
+
+  )
+#+end_src
 ** Language modes
 I am using tree-sitter, with the Language grammars installed by nixos.
 Some of this borrowed from https://gist.github.com/habamax/290cda0e0cdc6118eb9a06121b9bc0d7
@@ -2407,6 +2455,17 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
      )
 #+end_src
 
+* Matrix
+Because *I can*.
+
+#+begin_src emacs-lisp
+(use-package ement)
+
+(defun cadair/ement-connect ()
+  (interactive)
+  (ement-connect :user-id "@cadair:cadair.com" :uri-prefix "http://localhost:8009")
+  )
+#+end_src
 * Runtime Performance
 Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
 We also increase Read Process Output Max so emacs can read more data.
