@@ -506,7 +506,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
   (scroll-conservatively 10)            ;; Smooth scrolling
   ;;(scroll-margin 8)
 
-  (confirm-kill-emacs 'y-or-n-p)
+  (use-short-answers t)
 
   (tab-width 4)
   (setq-default 'truncate-lines t)
