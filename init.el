@@ -1013,11 +1013,23 @@ falling back on searching your PATH."
 (add-to-list 'auto-mode-alist '("\\.xsh\\'" . xonsh-mode))
 (add-to-list 'auto-mode-alist '("\\.xonshrc\\'" . xonsh-mode))
 
+(use-package rustic
+  :ensure t
+  :config
+  (setq rustic-format-on-save nil)
+  :custom
+  (rustic-cargo-use-last-stored-arguments t))
+
 (use-package magit
   :commands magit-status)
 (use-package forge
   :after magit
   )
+
+(my-local-leader
+  :states 'normal
+  :keymaps 'forge-post-mode-map
+  "d" 'forge-topic-toggle-draft)
 
 (use-package diff-hl
   :hook ((dired-mode         . diff-hl-dired-mode-unless-remote)

@@ -30,6 +30,8 @@ in {
       nil
       # dap
       unstable.python313Packages.debugpy
+	  # rust
+	  unstable.rust-analyzer
     ];
 
     # emacs
