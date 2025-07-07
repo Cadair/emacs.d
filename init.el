@@ -1018,7 +1018,9 @@ falling back on searching your PATH."
   :config
   (setq rustic-format-on-save nil)
   :custom
-  (rustic-cargo-use-last-stored-arguments t))
+  (rustic-cargo-use-last-stored-arguments t)
+  (rustic-lsp-client 'eglot)
+)
 
 (use-package magit
   :commands magit-status)
