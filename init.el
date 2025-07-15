@@ -657,6 +657,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :custom
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(scad-mode . ("openscad-lsp")))
+  (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)

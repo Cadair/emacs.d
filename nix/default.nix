@@ -32,6 +32,7 @@ in {
       unstable.python313Packages.debugpy
 	  # rust
 	  unstable.rust-analyzer
+	  harper
     ];
 
     # emacs
