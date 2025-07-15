@@ -191,7 +191,7 @@
     "f r" '(consult-recent-file :wk "Recent files")
     "f R" '(doom/move-this-file :wk "Rename/Move file")
     "f s" '(save-buffer :wk "Save Buffer")
-    "f S" '(write-file :wk "Save file as...")
+    "f S" '(evil-write-all :wk "Save all files")
     )
 
   (start/leader-keys
@@ -326,7 +326,8 @@
   (start/leader-keys
     "t" '(:ignore t :wk "Toggle")
     "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
-    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+    "t l" '(toggle-truncate-lines :wk "Toggle truncate lines")
+    "t L" '(display-line-numbers-mode :wk "Toggle line numbers")
     )
 
   (start/leader-keys
@@ -1023,7 +1024,16 @@ falling back on searching your PATH."
 )
 
 (use-package magit
-  :commands magit-status)
+  :commands magit-status
+  )
+(my-local-leader
+  :states 'normal
+  :keymaps 'git-commit-mode-map
+  "i" '(git-commit-insert-trailer :wk "Insert Trailer")
+  "c" '(with-editor-finish :wk "Commit")
+  "k" '(with-editor-cancel :wk "Abort")
+  )
+
 (use-package forge
   :after magit
   )
@@ -1031,7 +1041,8 @@ falling back on searching your PATH."
 (my-local-leader
   :states 'normal
   :keymaps 'forge-post-mode-map
-  "d" 'forge-topic-toggle-draft)
+  "d" 'forge-topic-toggle-draft
+  )
 
 (use-package diff-hl
   :hook ((dired-mode         . diff-hl-dired-mode-unless-remote)
