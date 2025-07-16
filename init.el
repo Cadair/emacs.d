@@ -1042,7 +1042,7 @@ falling back on searching your PATH."
 (my-local-leader
   :states 'normal
   :keymaps 'forge-post-mode-map
-  "d" 'forge-topic-toggle-draft
+  "d" '(forge-topic-toggle-draft :wk "Toggle Draft")
   )
 
 (use-package diff-hl

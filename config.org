@@ -1385,7 +1385,7 @@ Complete text-based user interface to Git.
 (my-local-leader
   :states 'normal
   :keymaps 'forge-post-mode-map
-  "d" 'forge-topic-toggle-draft
+  "d" '(forge-topic-toggle-draft :wk "Toggle Draft")
   )
 #+end_src
 
