@@ -33,6 +33,7 @@ in {
 	  # rust
 	  unstable.rust-analyzer
 	  harper
+	  wtype
     ];
 
     # emacs
