@@ -1923,7 +1923,7 @@ falling back on searching your PATH."
   (let ((frame (make-frame '((name . "emacs-float")
                              (fullscreen . 0)
                              (undecorated . t)
-                             (width . 70)
+                             (width . 140)
                              (height . 20))))
         (buf (get-buffer-create "emacs-float")))
     (select-frame frame)
