@@ -91,6 +91,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
 - [[#matrix][Matrix]]
 - [[#other-things][Other things]]
   - [[#emacs-everywhere][Emacs Everywhere]]
+  - [[#new-client-frame][New Client Frame]]
 - [[#runtime-performance][Runtime Performance]]
 
 * Important to load first
@@ -2577,6 +2578,20 @@ Because *I can*.
       (set-window-dedicated-p (selected-window) t))))
 
    #+end_src
+
+** New Client Frame
+
+I haven't used emacsclient much because I want a new frame, so let's make a helper function to pop a new frame which acts like a new instance of emacs, i.e. opens the dashboard.
+
+#+begin_src emacs-lisp
+(defun cadair/new-client-frame ()
+  "Launch a new frame on the dashboard."
+  (interactive)
+  (let ((frame (make-frame '((fullscreen . 0)
+                             (undecorated . f)))))
+  (select-frame frame)
+    (dashboard-open)))
+#+end_src
 
 * Runtime Performance
 Dial the GC threshold back down so that garbage collection happens more frequently but in less time.

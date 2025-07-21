@@ -1941,6 +1941,14 @@ falling back on searching your PATH."
       (set-frame-parameter frame 'delete-before-kill-buffer t)
       (set-window-dedicated-p (selected-window) t))))
 
+(defun cadair/new-client-frame ()
+  "Launch a new frame on the dashboard."
+  (interactive)
+  (let ((frame (make-frame '((fullscreen . 0)
+                             (undecorated . f)))))
+  (select-frame frame)
+    (dashboard-open)))
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 ;; Increase the amount of data which Emacs reads from the process
