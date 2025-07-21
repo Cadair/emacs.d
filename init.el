@@ -145,7 +145,8 @@
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
     "b R" '(rename-buffer :wk "Rename buffer")
-    "b s" '(scratch-buffer :wk "Scratch Buffer")
+    "b s" '(cadair/python-scratch :wk "Python Scratch Buffer")
+    "b S" '(scratch-buffer :wk "Scratch Buffer")
     "b -" '(view-echo-area-messages :wk "Messages Buffer")
     )
 
@@ -838,6 +839,12 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :program ruff-format-command
   :args (list "check" "--fix" "--unsafe-fixes" "--stdin-filename" (or (buffer-file-name) input-file))
   :lighter " RuffCheck")
+
+(defun cadair/python-scratch ()
+  "Launch a scratch buffer in Python Mode"
+  (interactive)
+  (switch-to-buffer (get-buffer-create "*python-scratch*"))
+  (with-current-buffer "*python-scratch*" (python-ts-mode)))
 
 ;; Add to __all__
 (defsubst python-in-string/comment ()

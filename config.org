@@ -283,7 +283,8 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
     "b R" '(rename-buffer :wk "Rename buffer")
-    "b s" '(scratch-buffer :wk "Scratch Buffer")
+    "b s" '(cadair/python-scratch :wk "Python Scratch Buffer")
+    "b S" '(scratch-buffer :wk "Scratch Buffer")
     "b -" '(view-echo-area-messages :wk "Messages Buffer")
     )
 
@@ -1100,7 +1101,7 @@ Enable the excellent pytest package, and setup an extra hook for [[https://githu
   )
 #+end_src
 
-Finally, setup the flymake-ruff package, currently my own fork of it where I am working on enabling different levels of errors.
+Finally, setup the flymake-ruff package, to have ruff checks outside of eglot.
 
 #+begin_src emacs-lisp
 (use-package flymake-ruff
@@ -1140,6 +1141,20 @@ Finally, setup the flymake-ruff package, currently my own fork of it where I am 
        :args (list "check" "--fix" "--unsafe-fixes" "--stdin-filename" (or (buffer-file-name) input-file))
        :lighter " RuffCheck")
      #+end_src
+
+**** Python "scratch" buffer
+
+A very common use case I have is create a scratch buffer and then enable python mode and use that to send content to the repl with my custom functions below.
+
+This little function will enable me to create a python specific scratch buffer
+
+#+begin_src emacs-lisp
+(defun cadair/python-scratch ()
+  "Launch a scratch buffer in Python Mode"
+  (interactive)
+  (switch-to-buffer (get-buffer-create "*python-scratch*"))
+  (with-current-buffer "*python-scratch*" (python-ts-mode)))
+#+end_src
 
 **** Custom Functions
 :PROPERTIES:
