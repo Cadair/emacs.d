@@ -92,11 +92,11 @@ in {
       Unit = {
         Description = "Emacs: the extensible, self-documenting text editor";
         After = ["graphical-session.target"];
-        Requires = ["ssh-agent.service"];
+        Requires = ["gpg-agent.service"];
       };
 
       Service = {
-        Environment = ["SSH_AUTH_SOCK=%t/keyring/ssh" "PATH=/run/current-system/sw/bin/:${config.home.homeDirectory}/.nix-profile/bin/" ];
+        Environment = ["SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh" "PATH=/run/current-system/sw/bin/:${config.home.homeDirectory}/.nix-profile/bin/" ];
         EnvironmentFile = "${config.home.homeDirectory}/${config.home.file.session_env.target}";
         Type = "forking";
         ExecStart = "${config.programs.emacs.finalPackage.out}/bin/emacs --daemon";
