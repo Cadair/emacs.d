@@ -49,7 +49,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
 - [[#development][Development]]
   - [[#flymake][Flymake]]
   - [[#projects][Projects]]
-  - [[#language-server][Language Server]]
+  - [[#language-server-eglot][Language Server (eglot)]]
   - [[#dape][dape]]
   - [[#yasnippet][Yasnippet]]
   - [[#code-folding][Code Folding]]
@@ -880,7 +880,7 @@ Then tabspaces
   (add-to-list 'consult-buffer-sources 'consult--source-workspace))
 #+END_SRC
 
-** Language Server
+** Language Server (eglot)
 *** Eglot
 Language Server Protocol Support for Emacs. The built-in is now Eglot (with emacs 29).
 
@@ -902,11 +902,36 @@ Use visual block to uncomment easily in Org documents (C-v).
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
-  :hook ((python-mode python-ts-mode nix-mode) . eglot-ensure)
-  :custom
+  :hook ((python-mode python-ts-mode nix-mode scad-mode) . eglot-ensure)
+  :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(scad-mode . ("openscad-lsp")))
   (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
+  (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
+  (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
+  :custom
+  (eglot-workspace-configuration 
+		 (:harper-ls (:userDictPath ""
+                      :workspaceDictPath ""
+                      :fileDictPath ""
+                      :linters (:SpellCheck :json-false
+                                :SpelledNumbers :json-false
+                                :AnA t
+                                :SentenceCapitalization t
+                                :UnclosedQuotes t
+                                :WrongQuotes :json-false
+                                :LongSentences t
+                                :RepeatedWords t
+                                :Spaces t
+                                :Matcher t
+                                :CorrectNumberSuffix t)
+                      :codeActions (:ForceStable :json-false)
+                      :markdown (:IgnoreLinkTitle :json-false)
+                      :diagnosticSeverity "hint"
+                      :isolateEnglish :json-false
+                      :dialect "American"
+                      :maxFileLength 120000
+                      :ignoredLintsPath [])))
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
