@@ -375,7 +375,8 @@
 
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
-  ;; :hook
+  :hook
+  (prog-mode . editorconfig-mode)
   ;; replaced by treesit-fold for now
   ;; (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   :config
