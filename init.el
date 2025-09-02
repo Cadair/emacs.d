@@ -393,6 +393,31 @@
           nil nil t)
   )
 
+;; No tabs by default
+(setq-default indent-tabs-mode nil)
+
+;; Detect if a file has more lines which start with a tab vs a space and set indent-tabs-mode appropriately
+;; from: https://www.emacswiki.org/emacs/NoTabs
+(defun infer-indentation-style ()
+  "Set indent-tabs-mode by looking at the source"
+  (interactive)
+  (let ((space-count (how-many "^  " (point-min) (point-max)))
+        (tab-count (how-many "^\t" (point-min) (point-max))))
+    (if (> space-count tab-count) (setq indent-tabs-mode nil))
+    (if (> tab-count space-count) (setq indent-tabs-mode t))))
+
+;; Run this function on all buffers
+(add-hook 'prog-mode-hook #'infer-indentation-style)
+(add-hook 'text-mode-hook #'infer-indentation-style)
+
+;; Configure the whitespace built-in package to highlight indentation which doesn't match the default for a file
+(use-package whitespace
+  :ensure nil
+  :custom
+  (global-whitespace-mode t)
+  ;; Highlight inconsistent indentation and trailing whitespace via colours (faces) and also tabs as a symbol
+ (whitespace-style '(face trailing indentation tab-mark)))
+
 (setq
  ediff-diff-options "-w" ; turn off whitespace checking
  ediff-split-window-function #'split-window-horizontally
