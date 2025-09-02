@@ -83,14 +83,14 @@
 
    "<up>" 'comint-previous-input
    "<down>" 'comint-next-input
-  )
-  
+   )
+
   (general-define-key
    :keymaps 'compilation-mode-map
    :states 'motion
 
    "<escape>" 'quit-window
-  )
+   )
 
   ;; Set up a local-leader used for language mode specific functionality
   (general-create-definer my-local-leader
@@ -99,15 +99,15 @@
 
   ;; Add some eglot related things to , because my muscle memory demands it
   (my-local-leader
-	:states '(normal visual)
-	;; If I only enable this in eglot-mode-map then setting major-mode specific binds override this one
-	;;:keymaps 'eglot-mode-map
-	"g" '(:ignore t :wk "Eglot goto")
-	"g g" '(xref-find-definitions :wk "Goto Definition")
-	"g D" '(xref-find-definitions-other-window :wk "Goto Definition (other window)")
-	"g r" '(xref-find-references :wk "Find references")
-	"d" '('eldoc-doc-buffer :wk "Documentation")
-	)
+    :states '(normal visual)
+    ;; If I only enable this in eglot-mode-map then setting major-mode specific binds override this one
+    ;;:keymaps 'eglot-mode-map
+    "g" '(:ignore t :wk "Eglot goto")
+    "g g" '(xref-find-definitions :wk "Goto Definition")
+    "g D" '(xref-find-definitions-other-window :wk "Goto Definition (other window)")
+    "g r" '(xref-find-references :wk "Find references")
+    "d" '('eldoc-doc-buffer :wk "Documentation")
+    )
 
   ;; Set up 'SPC' as primary leader key
   (general-create-definer start/leader-keys
@@ -126,7 +126,7 @@
   (start/leader-keys
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
-	"a e" '(cadair/ement-connect :wk "Matrix")
+    "a e" '(cadair/ement-connect :wk "Matrix")
     )
 
   (start/leader-keys
@@ -160,12 +160,12 @@
     "c g d" '(xref-find-definitions :wk "Goto Definition")
     "c g D" '(xref-find-definitions-other-window :wk "Goto Definition (other window)")
     "c g r" '(xref-find-references :wk "Find references")
-	"c i"   '(indent-region :wk "Indent Region")
+    "c i"   '(indent-region :wk "Indent Region")
     "c l"   '(evilnc-comment-or-uncomment-lines :wk "Toggle Comments")
     "c L"   '(evilnc-toggle-comment-empty-lines :wk "Toggle commenting empty lines")
-	"c o"   '(symbols-outline-show :wk "Show symbols outline")
-	"c r"   '(eglot-rename :wk "Rename symbol at point")
-	"c s"   '(consult-eglot-symbols :wk "Find Symbols in Workspace")
+    "c o"   '(symbols-outline-show :wk "Show symbols outline")
+    "c r"   '(eglot-rename :wk "Rename symbol at point")
+    "c s"   '(consult-eglot-symbols :wk "Find Symbols in Workspace")
     )
 
   (start/leader-keys
@@ -271,15 +271,15 @@
     "l L" '(tab-move :wk "Move Tab Right")
     "l H" '((lambda () (interactive) (tab-move -1)) :wk "Move Tab Left")
     )
-  
+
   (start/leader-keys
     "o" '(:ignore t :wk "Org Mode")
     "o a" '(org-agenda :wk "Agenda")
-	"o c" '(org-capture :wk "Capture")
-	"o f" '(consult-org-agenda :wk "Find Agenda Item")
-	"o h" '(org-insert-todo-heading :wk "Insert TODO heading")
-	"o s" '(org-insert-todo-subheading :wk "Insert TODO subheading")
-	"o t" '(lambda() (interactive)(find-file "~/Notebooks/ToDo.org") :wk "Open ToDo.org")
+    "o c" '(org-capture :wk "Capture")
+    "o f" '(consult-org-agenda :wk "Find Agenda Item")
+    "o h" '(org-insert-todo-heading :wk "Insert TODO heading")
+    "o s" '(org-insert-todo-subheading :wk "Insert TODO subheading")
+    "o t" '(lambda() (interactive)(find-file "~/Notebooks/ToDo.org") :wk "Open ToDo.org")
     )
 
   (start/leader-keys
@@ -329,6 +329,7 @@
     "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
     "t l" '(toggle-truncate-lines :wk "Toggle truncate lines")
     "t L" '(display-line-numbers-mode :wk "Toggle line numbers")
+    "t w" '(whitespace-mode :wk "Toggle whitespace highlighting")
     )
 
   (start/leader-keys
@@ -344,9 +345,9 @@
     )
 
   (start/leader-keys
-	"x" '(:ignore t :wk "Cleanup?")
-	"x d w" '(delete-trailing-whitespace :wk "Delete trailing whitespace")
-	)
+    "x" '(:ignore t :wk "Cleanup?")
+    "x d w" '(delete-trailing-whitespace :wk "Delete trailing whitespace")
+    )
   )
 
 (use-package emacs
@@ -414,9 +415,10 @@
 (use-package whitespace
   :ensure nil
   :custom
-  (global-whitespace-mode t)
   ;; Highlight inconsistent indentation and trailing whitespace via colours (faces) and also tabs as a symbol
- (whitespace-style '(face trailing indentation tab-mark)))
+  (whitespace-style '(face trailing indentation tab-mark)))
+(add-hook 'prog-mode-hook #'whitespace-mode)
+(add-hook 'text-mode-hook #'whitespace-mode)
 
 (setq
  ediff-diff-options "-w" ; turn off whitespace checking
@@ -550,21 +552,21 @@
 (defun doom-files--update-refs (&rest files)
   "Ensure FILES are updated in `recentf', `magit' and `save-place'."
   (let (toplevels)
-	(dolist (file files)
+    (dolist (file files)
       (when (featurep 'vc)
-		(vc-file-clearprops file)
-		(when-let (buffer (get-file-buffer file))
+        (vc-file-clearprops file)
+        (when-let (buffer (get-file-buffer file))
           (with-current-buffer buffer
-			(vc-refresh-state))))
+            (vc-refresh-state))))
       (when (featurep 'magit)
-		(when-let (default-directory (magit-toplevel (file-name-directory file)))
+        (when-let (default-directory (magit-toplevel (file-name-directory file)))
           (cl-pushnew default-directory toplevels)))
       (unless (file-readable-p file)
-		(when (bound-and-true-p recentf-mode)
+        (when (bound-and-true-p recentf-mode)
           (recentf-remove-if-non-kept file))))
     (dolist (default-directory toplevels)
       (magit-refresh))
-	(when (bound-and-true-p save-place-mode)
+    (when (bound-and-true-p save-place-mode)
       (save-place-forget-unreadable-files))))
 
 (defun doom/copy-this-file (new-path &optional force-p)
@@ -615,10 +617,10 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (advice-add #'flymake--indicator-overlay-spec
               :filter-return
               (lambda (indicator)
-				(concat indicator
-						(propertize " "
-									'face 'default
-									'display `((margin left-margin)
+                (concat indicator
+                        (propertize " "
+                                    'face 'default
+                                    'display `((margin left-margin)
                                                (space :width 5))))))
   :custom
   (flymake-indicator-type 'margins)
@@ -762,7 +764,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :custom
   (yas-snippet-dirs
    '("~/.emacs.d/snippets"                 ;; writeable snippets dir
-	 "~/.emacs.d/hm-snippets"              ;; snippets managed by home-manager
+         "~/.emacs.d/hm-snippets"              ;; snippets managed by home-manager
      )
    )
   )
@@ -778,7 +780,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 
 (use-package combobulate
   :vc (:url "https://github.com/mickeynp/combobulate.git"
-	   :rev "master")
+           :rev "master")
   :hook ((prog-mode . combobulate-mode)))
 
 (my-local-leader
@@ -832,13 +834,13 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
     ["Extra Options"
      ("-r" "Remote data (any)" "--remote-data=any")
      ("-c" "Coverage" "--cov --cov-report=term-missing")
-	 ]
+         ]
     )
   )
 
 (use-package flymake-ruff
   :vc (:url "https://github.com/erickgnavar/flymake-ruff"
-			:rev :newest)
+                        :rev :newest)
   :ensure t
   :hook (eglot-managed-mode . flymake-ruff-load)
   :config
@@ -914,7 +916,7 @@ falling back on searching your PATH."
   (if (file-name-absolute-p exe)
       (and (file-executable-p exe) exe)
     (let ((exe-root (format "bin/%s" exe)))
-	  ;; micromamba sets python-shell-virtualenv-root as well
+          ;; micromamba sets python-shell-virtualenv-root as well
       (or (and python-shell-virtualenv-root
                (let ((bin (expand-file-name exe-root python-shell-virtualenv-root)))
                  (and (file-exists-p bin) bin)))
@@ -959,7 +961,7 @@ falling back on searching your PATH."
   (interactive)
   (setq initial-buffer (current-buffer))
   (if (python-shell-get-buffer)
-	  (kill-process (get-buffer-process (python-shell-get-buffer))))
+          (kill-process (get-buffer-process (python-shell-get-buffer))))
   (sleep-for 0.5)
   (+python/open-ipython-repl)
   (evil-normal-state)
@@ -991,13 +993,13 @@ falling back on searching your PATH."
                                  (shell-quote-argument (file-name-nondirectory buffer-file-name)))))
     (if arg
         (call-interactively 'compile)
-	  (compile compile-command t)
-	  (with-current-buffer (get-buffer "*compilation*")
+          (compile compile-command t)
+          (with-current-buffer (get-buffer "*compilation*")
         (inferior-python-mode)))))
 
 ;; Always scroll to the end in a python shell
 (add-hook 'inferior-python-mode-hook
-		  (lambda ()
+                  (lambda ()
             (setq comint-move-point-for-output t)))
 
 (my-local-leader
@@ -1329,7 +1331,7 @@ falling back on searching your PATH."
       (progn ; flyspell is on, turn it off
         (message "Flyspell off")
         (flyspell-mode -1))
-										; else - flyspell is off, turn it on
+                                                                                ; else - flyspell is off, turn it on
     (flyspell-on-for-buffer-type)))
 
 (add-hook 'find-file-hook 'flyspell-on-for-buffer-type)
@@ -1360,9 +1362,9 @@ falling back on searching your PATH."
       org-hide-leading-stars t
       org-pretty-entities t
       org-ellipsis "  ·"
-	  org-startup-folded "content"
-	  org-cycle-separator-lines -1
-	  )
+      org-startup-folded "content"
+      org-cycle-separator-lines -1
+      )
 
 (setq org-src-fontify-natively t
       org-src-tab-acts-natively t
@@ -1380,7 +1382,7 @@ falling back on searching your PATH."
 (setq org-fontify-done-headline t)
 (custom-set-faces
  '(org-done ((t (:weight normal
-						 :strike-through t))))
+                                                 :strike-through t))))
  '(org-headline-done
    ((((class color) (min-colors 16))
      (:strike-through t)))))
@@ -1421,11 +1423,11 @@ falling back on searching your PATH."
 
 (setq org-confirm-babel-evaluate nil)
 (org-babel-do-load-languages 'org-babel-load-languages
-							 '((python . t)
-							   (emacs-lisp . t)
-							   (org . t)
-							   (shell . t)
-							   ))
+                                                    '((python . t)
+                                                      (emacs-lisp . t)
+                                                      (org . t)
+                                                      (shell . t)
+                                                      ))
 
 (use-package htmlize)
 
@@ -1635,8 +1637,8 @@ falling back on searching your PATH."
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "WIP(i)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))
-			 )
-	  )
+                      )
+       )
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "red" :weight bold)
@@ -1861,12 +1863,12 @@ falling back on searching your PATH."
                                                             ;; (if bh/hide-scheduled-and-waiting-next-tasks
                                                             ;;     ""
                                                             ;;   " (including WAITING and SCHEDULED tasks)")
-															))
+                                                                                                                    ))
                       (org-agenda-skip-function 'bh/skip-non-tasks)
                       (org-tags-match-list-sublevels nil)
                       ;; (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
                       ;; (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-					  ))
+                                      ))
           (tags "-REFILE/"
                 ((org-agenda-overriding-header "Tasks to Archive")
                  ;; (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
@@ -1965,7 +1967,7 @@ falling back on searching your PATH."
       (setq-local header-line-format
                   (format " %s to insert text or %s to cancel."
                           (propertize "C-c C-c" 'face 'help-key-binding)
-			  (propertize "C-c C-k" 'face 'help-key-binding)))
+                          (propertize "C-c C-k" 'face 'help-key-binding)))
       ;; Make the frame more temporary-like
       (set-frame-parameter frame 'delete-before-kill-buffer t)
       (set-window-dedicated-p (selected-window) t))))
