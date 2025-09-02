@@ -679,36 +679,15 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
-  :hook ((python-mode python-ts-mode nix-mode scad-mode) . eglot-ensure)
+  :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode) . eglot-ensure)
   :config
+  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(scad-mode . ("openscad-lsp")))
   (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
   :custom
-  (eglot-workspace-configuration 
-		 (:harper-ls (:userDictPath ""
-                      :workspaceDictPath ""
-                      :fileDictPath ""
-                      :linters (:SpellCheck :json-false
-                                :SpelledNumbers :json-false
-                                :AnA t
-                                :SentenceCapitalization t
-                                :UnclosedQuotes t
-                                :WrongQuotes :json-false
-                                :LongSentences t
-                                :RepeatedWords t
-                                :Spaces t
-                                :Matcher t
-                                :CorrectNumberSuffix t)
-                      :codeActions (:ForceStable :json-false)
-                      :markdown (:IgnoreLinkTitle :json-false)
-                      :diagnosticSeverity "hint"
-                      :isolateEnglish :json-false
-                      :dialect "American"
-                      :maxFileLength 120000
-                      :ignoredLintsPath [])))
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
