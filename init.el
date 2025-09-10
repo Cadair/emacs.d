@@ -49,7 +49,7 @@
   (evil-want-C-i-jump nil)      ;; Disables C-i jump
   (evil-undo-system 'undo-redo) ;; C-r to redo
   (org-return-follows-link t)   ;; Sets RETURN key in org-mode to follow links
-  
+
   ;; Unmap keys in 'evil-maps. If not done, org-return-follows-link will not work
   :bind (:map evil-motion-state-map
               ("SPC" . nil)
@@ -363,7 +363,7 @@
   (blink-cursor-mode nil)               ;; Don't blink cursor
   (global-auto-revert-mode t)           ;; Automatically reload file and show changes if the file has changed
   (global-display-line-numbers-mode t)  ;; Display line numbers
-  
+
   (mouse-wheel-progressive-speed nil)   ;; Disable progressive speed when scrolling
   (scroll-conservatively 10)            ;; Smooth scrolling
   ;;(scroll-margin 8)
@@ -500,14 +500,14 @@
   :hook
   (prog-mode . breadcrumb-local-mode)
   (org-mode . breadcrumb-local-mode)
-  
+
   :custom-face
   (breadcrumb-face ((t (:inherit mode-line))))
-  
+
   :custom
   ;; This doesn't work as breadcrumb get's prepended
   ;; (header-line-format `("" header-line-indent))
-  
+
   ;; Add nerd-icons to breadcrumb
   (breadcrumb-imenu-crumb-separator
    (concat " "(nerd-icons-faicon "nf-fa-chevron_right") " "))
@@ -515,7 +515,7 @@
    (concat " "(nerd-icons-faicon "nf-fa-chevron_right") " "))
   (breadcrumb-imenu-max-length 0.5)
   (breadcrumb-project-max-length 0.5)
-  
+
   :preface
   ;; Add icons to breadcrumb
   (advice-add #'breadcrumb--format-project-node :around
@@ -802,15 +802,15 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (evil-define-key 'combobulate 'combobulate-key-map
   ;; Combobulate
   "o" 'combobulate
-  
-  ;; Linear navigation 
+
+  ;; Linear navigation
   "w" 'combobulate-navigate-logical-next
   "b" 'combobulate-navigate-logical-previous
 
   ;; Tree Navigation (hjkl)
   "h" 'combobulate-navigate-up
   "j" 'combobulate-navigate-next
-  "k" 'combobulate-navigate-previous 
+  "k" 'combobulate-navigate-previous
   "l" 'combobulate-navigate-down
 
   )
@@ -1931,11 +1931,11 @@ falling back on searching your PATH."
               collect (cond
                        ;; Last line without final newline
                        ((and (= i last-idx) (not has-final-newline))
-                        (format "wtype -s 350 \"%s\"" 
+                        (format "wtype -s 350 \"%s\""
                                 (replace-regexp-in-string "\"" "\\\\\"" line)))
                        ;; Any other line
                        (t
-                        (format "wtype -s 350 \"%s\" && wtype -k Return" 
+                        (format "wtype -s 350 \"%s\" && wtype -k Return"
                                 (replace-regexp-in-string "\"" "\\\\\"" line)))))
      " && ")))
 

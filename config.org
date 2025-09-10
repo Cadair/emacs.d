@@ -187,7 +187,7 @@ Notes:
     (evil-want-C-i-jump nil)      ;; Disables C-i jump
     (evil-undo-system 'undo-redo) ;; C-r to redo
     (org-return-follows-link t)   ;; Sets RETURN key in org-mode to follow links
-    
+
     ;; Unmap keys in 'evil-maps. If not done, org-return-follows-link will not work
     :bind (:map evil-motion-state-map
                 ("SPC" . nil)
@@ -508,7 +508,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
   (blink-cursor-mode nil)               ;; Don't blink cursor
   (global-auto-revert-mode t)           ;; Automatically reload file and show changes if the file has changed
   (global-display-line-numbers-mode t)  ;; Display line numbers
-  
+
   (mouse-wheel-progressive-speed nil)   ;; Disable progressive speed when scrolling
   (scroll-conservatively 10)            ;; Smooth scrolling
   ;;(scroll-margin 8)
@@ -707,14 +707,14 @@ Replace the default modeline with a prettier more useful.
   :hook
   (prog-mode . breadcrumb-local-mode)
   (org-mode . breadcrumb-local-mode)
-  
+
   :custom-face
   (breadcrumb-face ((t (:inherit mode-line))))
-  
+
   :custom
   ;; This doesn't work as breadcrumb get's prepended
   ;; (header-line-format `("" header-line-indent))
-  
+
   ;; Add nerd-icons to breadcrumb
   (breadcrumb-imenu-crumb-separator
    (concat " "(nerd-icons-faicon "nf-fa-chevron_right") " "))
@@ -722,7 +722,7 @@ Replace the default modeline with a prettier more useful.
    (concat " "(nerd-icons-faicon "nf-fa-chevron_right") " "))
   (breadcrumb-imenu-max-length 0.5)
   (breadcrumb-project-max-length 0.5)
-  
+
   :preface
   ;; Add icons to breadcrumb
   (advice-add #'breadcrumb--format-project-node :around
@@ -1080,15 +1080,15 @@ Ok, here's an experiment with defining combobulate evil bindings. I'm going to m
 (evil-define-key 'combobulate 'combobulate-key-map
   ;; Combobulate
   "o" 'combobulate
-  
-  ;; Linear navigation 
+
+  ;; Linear navigation
   "w" 'combobulate-navigate-logical-next
   "b" 'combobulate-navigate-logical-previous
 
   ;; Tree Navigation (hjkl)
   "h" 'combobulate-navigate-up
   "j" 'combobulate-navigate-next
-  "k" 'combobulate-navigate-previous 
+  "k" 'combobulate-navigate-previous
   "l" 'combobulate-navigate-down
 
   )
@@ -1660,7 +1660,7 @@ Check out their [[https://github.com/minad/consult][git repository]] for more aw
 
 *** Eglot symbols
 Things for interacting with workspace/symbols in lsp land, but as pylsp dosen't support this it's all a little moot.  - https://github.com/python-lsp/python-lsp-server/issues/237
-    
+
 https://github.com/mohkale/consult-eglot
 
 #+begin_src emacs-lisp
@@ -1789,7 +1789,7 @@ This auto-detect is taken from here: https://www.emacswiki.org/emacs/FlySpell#h5
 #+end_src
 
 ** TODO jinx - better spell check?
-   
+
 https://github.com/minad/jinx
 
 ** Evil-nerd-commenter
@@ -1877,7 +1877,7 @@ Let's finally close the =use-package= declaration with a parenthesis.
 #+begin_src emacs-lisp
 )
 #+end_src
-    
+
 *** Fonts and Faces
 #+begin_src emacs-lisp
 (setq org-fontify-done-headline t)
@@ -2522,7 +2522,7 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
      (request-log-level 'debug)
      (request-message-level 'debug)
      )
-   
+
    (use-package org-clock-float
      :requires (request)
      :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
@@ -2549,7 +2549,7 @@ Because *I can*.
 #+end_src
 
 * Other things
- 
+
 
 ** Emacs Everywhere
 
@@ -2568,11 +2568,11 @@ Because *I can*.
               collect (cond
                        ;; Last line without final newline
                        ((and (= i last-idx) (not has-final-newline))
-                        (format "wtype -s 350 \"%s\"" 
+                        (format "wtype -s 350 \"%s\""
                                 (replace-regexp-in-string "\"" "\\\\\"" line)))
                        ;; Any other line
                        (t
-                        (format "wtype -s 350 \"%s\" && wtype -k Return" 
+                        (format "wtype -s 350 \"%s\" && wtype -k Return"
                                 (replace-regexp-in-string "\"" "\\\\\"" line)))))
      " && ")))
 
