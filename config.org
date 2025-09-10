@@ -615,7 +615,8 @@ This is based off reading this tutorial: https://www.masteringemacs.org/article/
 
    Enable colour in compilation buffers.
    #+begin_src emacs-lisp
-(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+   (setq compilation-scroll-output t)
    #+end_src
 * Appearance
 ** Set Theme

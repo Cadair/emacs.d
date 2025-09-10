@@ -446,6 +446,7 @@
      (not (window-dedicated-p (selected-window)))))
 
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(setq compilation-scroll-output t)
 
 ;;  (use-package gruvbox-theme
 ;;    :config
