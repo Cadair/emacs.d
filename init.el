@@ -447,6 +447,7 @@
 
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output t)
+(setq compile-command "tox -e py313")
 
 ;;  (use-package gruvbox-theme
 ;;    :config
