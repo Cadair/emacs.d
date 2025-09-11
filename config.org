@@ -2520,9 +2520,9 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
    #+begin_src emacs-lisp
    (use-package request
      ;; Enable these to debug org-clock-float requests
-     :custom
-     (request-log-level 'debug)
-     (request-message-level 'debug)
+     ;; :custom
+     ;; (request-log-level 'debug)
+     ;; (request-message-level 'debug)
      )
 
    (use-package org-clock-float

@@ -1898,9 +1898,9 @@ falling back on searching your PATH."
 
 (use-package request
   ;; Enable these to debug org-clock-float requests
-  :custom
-  (request-log-level 'debug)
-  (request-message-level 'debug)
+  ;; :custom
+  ;; (request-log-level 'debug)
+  ;; (request-message-level 'debug)
   )
 
 (use-package org-clock-float
