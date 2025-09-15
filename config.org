@@ -2075,6 +2075,7 @@ Now let's setup a lot of org-specific keybinds, global ones are in the main keyb
      "c i" 'org-clock-in
      "c I" 'org-clock-in-last
      "c o" 'org-clock-out
+     "c O" 'cadair/org-clock-out-at-time
      "c r" 'org-resolve-clocks
      "c R" 'org-clock-report
      "c t" 'org-evaluate-time-range
@@ -2225,13 +2226,21 @@ Org-Agenda
    (setq org-use-fast-todo-selection t)
    #+end_src
 
-   Calendar Setup
+**** Calendar Setup
    #+begin_src emacs-lisp
    (setq calendar-latitude 53.57)
    (setq calendar-longitude -1.78)
    (setq calendar-location-name "Holmfirth")
    #+end_src
 
+**** org-clock-out-at-time
+#+begin_src emacs-lisp
+(defun cadair/org-clock-out-at-time ()
+  "Clock out at a specified time"
+  (interactive)
+  (let ((time (org-read-date)))
+    (org-clock-out nil nil (org-time-string-to-time time))))
+#+end_src
 ** Secretaria - Clock Notifications
    #+begin_src emacs-lisp
    (use-package alert
@@ -2488,6 +2497,7 @@ Org-Agenda
                      (org-tags-match-list-sublevels nil))))
              nil))))
     #+end_src
+
 
 ** Waybar
 

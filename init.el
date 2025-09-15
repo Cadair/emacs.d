@@ -1515,6 +1515,7 @@ falling back on searching your PATH."
   "c i" 'org-clock-in
   "c I" 'org-clock-in-last
   "c o" 'org-clock-out
+  "c O" 'cadair/org-clock-out-at-time
   "c r" 'org-resolve-clocks
   "c R" 'org-clock-report
   "c t" 'org-evaluate-time-range
@@ -1657,6 +1658,12 @@ falling back on searching your PATH."
 (setq calendar-latitude 53.57)
 (setq calendar-longitude -1.78)
 (setq calendar-location-name "Holmfirth")
+
+(defun cadair/org-clock-out-at-time ()
+  "Clock out at a specified time"
+  (interactive)
+  (let ((time (org-read-date)))
+    (org-clock-out nil nil (org-time-string-to-time time))))
 
 (use-package alert
   :custom
