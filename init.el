@@ -1354,6 +1354,9 @@ falling back on searching your PATH."
   (shell-file-name "xonsh")
   )
 
+(use-package chatgpt-shell
+  :ensure t)
+
 (use-package org
   :defer t
   :custom

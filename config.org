@@ -75,6 +75,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#evil-nerd-commenter][Evil-nerd-commenter]]
   - [[#indent-guides][Indent guides]]
   - [[#eat---terminal][EAT - Terminal]]
+  - [[#llm][LLM]]
 - [[#org-mode][Org Mode]]
   - [[#visuals][Visuals]]
   - [[#vertico-fixes][Vertico Fixes]]
@@ -1820,6 +1821,15 @@ https://github.com/minad/jinx
   (shell-file-name "xonsh")
   )
 #+end_src
+
+** LLM
+
+#+begin_src emacs-lisp
+(use-package chatgpt-shell
+  :ensure t)
+
+#+end_src
+
 * Org Mode
 
 Orgy orgy org mode.
