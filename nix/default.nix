@@ -30,10 +30,10 @@ in {
       nil
       # dap
       unstable.python313Packages.debugpy
-	  # rust
-	  unstable.rust-analyzer
-	  harper
-	  wtype
+      # rust
+      unstable.rust-analyzer
+      harper
+      wtype
     ];
 
     # emacs
@@ -76,7 +76,7 @@ in {
     # Add a protocol handler for org-protocol which uses our capture script
     # This can be configured to use with firefox / chrome using this:
     # https://github.com/sprig/org-capture-extension
-    xdg.desktopEntries = {
+    xdg.desktopEntries = lib.mkIf pkgs.stdenv.isLinux {
       org-protocol = {
         name = "org-protocol";
         exec = "${config.home.homeDirectory}/.config/bin/emacs-capture %u";
