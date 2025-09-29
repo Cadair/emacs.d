@@ -684,7 +684,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
-  :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode) . eglot-ensure)
+  :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode yaml-ts-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
@@ -692,6 +692,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
+  (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
   :custom
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.

@@ -32,7 +32,10 @@ in {
       unstable.python313Packages.debugpy
       # rust
       unstable.rust-analyzer
+      # yaml
+      yaml-language-server
       harper
+    ] ++ lib.optionals (pkgs.stdenv.isLinux) [
       wtype
     ];
 
