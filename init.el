@@ -687,7 +687,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode yaml-ts-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
   (add-to-list 'eglot-server-programs '(scad-mode . ("openscad-lsp")))
   (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
@@ -1064,6 +1064,13 @@ falling back on searching your PATH."
   :custom
   (rustic-cargo-use-last-stored-arguments t)
   (rustic-lsp-client 'eglot)
+)
+
+(use-package terraform-mode
+  :ensure t
+  :custom
+  (terraform-indent-level 2)
+  (terraform-format-on-save t)
 )
 
 (use-package magit

@@ -28,6 +28,7 @@ in {
       ispell
       # nix lsp
       nil
+      nixd
       # dap
       unstable.python313Packages.debugpy
       # rust
