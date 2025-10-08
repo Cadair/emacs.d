@@ -92,6 +92,13 @@
    "<escape>" 'quit-window
    )
 
+  (general-define-key
+   :keymaps 'minibuffer-mode-map
+
+   "<C-up>" 'previous-history-element
+   "<C-down>" 'next-history-element
+   )
+
   ;; Set up a local-leader used for language mode specific functionality
   (general-create-definer my-local-leader
     :prefix ","
@@ -107,6 +114,7 @@
     "g D" '(xref-find-definitions-other-window :wk "Goto Definition (other window)")
     "g r" '(xref-find-references :wk "Find references")
     "d" '('eldoc-doc-buffer :wk "Documentation")
+    "z" '(zeal-at-point :wk "Zeal (at point)")
     )
 
   ;; Set up 'SPC' as primary leader key
@@ -345,7 +353,7 @@
     )
 
   (start/leader-keys
-    "x" '(:ignore t :wk "Cleanup?")
+    "x" '(:ignore t :wk "Cleanup")
     "x d w" '(delete-trailing-whitespace :wk "Delete trailing whitespace")
     )
   )
@@ -1073,6 +1081,8 @@ falling back on searching your PATH."
   (terraform-format-on-save t)
 )
 
+(use-package jinja2-mode)
+
 (use-package magit
   :commands magit-status
   )
@@ -1363,6 +1373,8 @@ falling back on searching your PATH."
 
 (use-package chatgpt-shell
   :ensure t)
+
+(use-package zeal-at-point)
 
 (use-package org
   :defer t
