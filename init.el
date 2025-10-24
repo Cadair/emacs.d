@@ -1083,6 +1083,19 @@ falling back on searching your PATH."
 
 (use-package jinja2-mode)
 
+(use-package mermaid-mode)
+
+(my-local-leader
+  :states 'normal
+  :keymaps 'mermaid-mode-map
+  "c c" 'mermaid-compile
+  "c f" 'mermaid-compile-file
+  "c b" 'mermaid-compile-buffer
+  "c r" 'mermaid-compile-region
+  "o b" 'mermaid-open-browser
+  "o d" 'mermaid-open-doc
+  )
+
 (use-package magit
   :commands magit-status
   )

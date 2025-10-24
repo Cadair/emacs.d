@@ -1400,7 +1400,6 @@ A bunch of language specific key binds, using ~,~ as the leader key.
   )
 #+end_src
 
-
 *** xonsh
 
 #+begin_src emacs-lisp
@@ -1437,6 +1436,23 @@ A bunch of language specific key binds, using ~,~ as the leader key.
 *** Jinja2
 #+begin_src emacs-lisp
 (use-package jinja2-mode)
+#+end_src
+
+*** Mermaid
+#+begin_src emacs-lisp
+(use-package mermaid-mode)
+#+end_src
+#+begin_src emacs-lisp
+(my-local-leader
+  :states 'normal
+  :keymaps 'mermaid-mode-map
+  "c c" 'mermaid-compile
+  "c f" 'mermaid-compile-file
+  "c b" 'mermaid-compile-buffer
+  "c r" 'mermaid-compile-region
+  "o b" 'mermaid-open-browser
+  "o d" 'mermaid-open-doc
+  )
 #+end_src
 
 * Other Packages

@@ -36,6 +36,8 @@ in {
       # yaml
       yaml-language-server
       harper
+      # mermaid
+      mermaid-cli
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [
       wtype
     ];
