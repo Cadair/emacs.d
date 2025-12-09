@@ -1096,6 +1096,9 @@ falling back on searching your PATH."
   "o d" 'mermaid-open-doc
   )
 
+(use-package auctex
+  :ensure t)
+
 (use-package magit
   :commands magit-status
   )

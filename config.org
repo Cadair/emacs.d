@@ -1455,6 +1455,12 @@ A bunch of language specific key binds, using ~,~ as the leader key.
   )
 #+end_src
 
+*** LaTeX
+#+begin_src emacs-lisp
+(use-package auctex
+  :ensure t)
+#+end_src
+
 * Other Packages
 All the package setups that don't need much tweaking.
 
