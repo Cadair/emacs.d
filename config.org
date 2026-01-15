@@ -1128,6 +1128,7 @@ I am using both micromamba and virtualenvwrapper-style virtual envs, so we enabl
   :hook (pyvenv-post-activate-hooks . restart-eglot)
   )
 
+(setenv "MAMBA_ROOT_PREFIX" (expand-file-name "~/.local/share/mamba"))
 (use-package micromamba
   :ensure t
   :hook (micromamba-postactivate-hook . restart-eglot)

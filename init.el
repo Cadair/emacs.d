@@ -834,6 +834,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :hook (pyvenv-post-activate-hooks . restart-eglot)
   )
 
+(setenv "MAMBA_ROOT_PREFIX" (expand-file-name "~/.local/share/mamba"))
 (use-package micromamba
   :ensure t
   :hook (micromamba-postactivate-hook . restart-eglot)
