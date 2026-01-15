@@ -318,6 +318,7 @@
   (start/leader-keys
     "q" '(:ignore t :wk "Quit / Session")
     "q q" '(save-buffers-kill-terminal :wk "Quit Emacs")
+    "q f" '(delete-frame :wk "Close Frame")
     "q r" '((lambda () (interactive)
               (load-file user-init-file))
             :wk "Reload Emacs config")
