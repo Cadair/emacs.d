@@ -1594,6 +1594,7 @@ falling back on searching your PATH."
      "l i" 'org-id-store-link
      "l l" 'org-insert-link
      "l L" 'org-insert-all-links
+     "l r" 'cadair/org-insert-link-from-path
      "l s" 'org-store-link
      "l S" 'org-insert-last-stored-link
      "l t" 'org-toggle-link-display
@@ -2078,6 +2079,25 @@ falling back on searching your PATH."
     (font-lock-flush beg end)
     (set-marker end nil)
     (message "Shifted active timestamps by %s minutes." minutes)))
+
+(defun cadair/org-insert-link-from-path (path)
+  "Insert an Org mode link to the heading selected by PATH."
+  (interactive
+   (list
+    (let ((org-refile-use-outline-path t))
+      (org-refile-get-location "Insert link to: "))))
+
+  (let* ((file (nth 1 path))
+         (full-path (nth 0 path))
+         (path-components (split-string full-path "/")) ; Split the path into components
+         (heading (nth (- (length path-components) 2) path-components)) ; Extract the second-to-last component
+         (buffer (find-file-noselect file)))
+    (unless buffer
+      (user-error "Buffer for file %s not found" file))
+
+    ;; Create the link string directly
+    (let ((link (concat "file:" file "::*" heading)))
+      (insert (concat "[[" link "][" heading "]]")))))
 
 (use-package ement)
 
