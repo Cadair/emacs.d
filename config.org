@@ -90,6 +90,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#agenda][Agenda]]
   - [[#waybar][Waybar]]
   - [[#org-clock-float][Org Clock Float]]
+  - [[#planning-with-time-blocks][Planning with Time Blocks]]
 - [[#matrix][Matrix]]
 - [[#other-things][Other things]]
   - [[#emacs-everywhere][Emacs Everywhere]]
@@ -427,6 +428,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "o" '(:ignore t :wk "Org Mode")
     "o a" '(org-agenda :wk "Agenda")
     "o c" '(org-capture :wk "Capture")
+    "o d" '(cadair/org-open-year-and-jump-to-today-plan :wk "Jump to today's plan")
     "o f" '(consult-org-agenda :wk "Find Agenda Item")
     "o h" '(org-insert-todo-heading :wk "Insert TODO heading")
     "o s" '(org-insert-todo-subheading :wk "Insert TODO subheading")
@@ -1882,7 +1884,15 @@ This auto-detect is taken from here: https://www.emacswiki.org/emacs/FlySpell#h5
 
 Orgy orgy org mode.
 
+Some variables
+#+begin_src emacs-lisp
+(setq cadair-year-plan
+      (expand-file-name (format "~/Notebooks/%s.org"
+                                (format-time-string "%Y"))))
+                                #+end_src
+
 We are splitting this use-package call up over multiple code blocks
+
       #+begin_src emacs-lisp
       (use-package org
         :defer t
@@ -1973,19 +1983,23 @@ See https://github.com/minad/vertico?tab=readme-ov-file#problematic-completion-c
 
 #+begin_src emacs-lisp
 ;; Use the other two org fixes from the vertico readme
-(advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
-(advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
+;; (advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
+;; (advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
 
-(defun vertico-enforce-basic-completion (&rest args)
-  (minibuffer-with-setup-hook
-      (:append
-       (lambda ()
-         (let ((map (make-sparse-keymap)))
-           (define-key map [tab] #'minibuffer-complete)
-           (use-local-map (make-composed-keymap (list map) (current-local-map))))
-         (setq-local completion-styles (cons 'basic completion-styles)
-                     vertico-preselect 'prompt)))
-    (apply args)))
+;; (defun vertico-enforce-basic-completion (&rest args)
+;;   (minibuffer-with-setup-hook
+;;       (:append
+;;        (lambda ()
+;;          (let ((map (make-sparse-keymap)))
+;;            (define-key map [tab] #'minibuffer-complete)
+;;            (use-local-map (make-composed-keymap (list map) (current-local-map))))
+;;          (setq-local completion-styles (cons 'basic completion-styles)
+;;                      vertico-preselect 'prompt)))
+;;     (apply args)))
+
+;; Alternative 2: Complete full paths
+(setq org-refile-use-outline-path 'file
+      org-outline-path-complete-in-steps nil)
 #+end_src
 
 ** Other Packages
@@ -2198,10 +2212,13 @@ Now let's setup a lot of org-specific keybinds, global ones are in the main keyb
      "s A" 'org-archive-subtree-default
      "s N" 'widen
      "s S" 'org-sort
-     "p" '(:ignore t :wk "priority")
+     "p" '(:ignore t :wk "priority & plan")
      "p d" 'org-priority-down
      "p p" 'org-priority
      "p u" 'org-priority-up
+     "p n" 'stefanv/org-plan-next
+     "p s
+" 'stefanv/org-shift-timestamps-in-region
      )
    #+end_src
 
@@ -2300,6 +2317,7 @@ Org-Agenda
   (let ((time (org-read-date)))
     (org-clock-out nil nil (org-time-string-to-time time))))
 #+end_src
+
 ** Secretaria - Clock Notifications
    #+begin_src emacs-lisp
    (use-package alert
@@ -2353,42 +2371,44 @@ Org-Agenda
    I have a bunch of custom capture stuff which pops frames from emacsd and other config.
 
    #+begin_src emacs-lisp
-   (defadvice org-capture
-       (after make-full-window-frame activate)
-     "Advise capture to be the only window when used as a popup"
-     (if (equal "emacs-capture" (frame-parameter nil 'name))
-         (delete-other-windows)))
+            (defadvice org-capture
+                (after make-full-window-frame activate)
+              "Advise capture to be the only window when used as a popup"
+              (if (equal "emacs-capture" (frame-parameter nil 'name))
+                  (delete-other-windows)))
 
-   (defadvice org-capture-finalize
-       (after delete-capture-frame activate)
-     "Advise capture-finalize to close the frame"
-     (if (equal "emacs-capture" (frame-parameter nil 'name))
-         (delete-frame)))
+            (defadvice org-capture-finalize
+                (after delete-capture-frame activate)
+              "Advise capture-finalize to close the frame"
+              (if (equal "emacs-capture" (frame-parameter nil 'name))
+                  (delete-frame)))
 
-   (defvar cadair-capture-file "~/Notebooks/refile.org")
-   (setq org-default-notes-file cadair-capture-file)
+            (defvar cadair-capture-file "~/Notebooks/refile.org")
+            (setq org-default-notes-file cadair-capture-file)
 
-   ;; This seems to work for protocol setup: http://www.mediaonfire.com/blog/2017_07_21_org_protocol_firefox.html
-   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-   (require 'org-protocol)
-   (defun transform-square-brackets-to-round-ones(string-to-transform)
-     "Transforms [ into ( and ] into ), other chars left unchanged."
-     (concat
-      (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
-     )
-   (setq org-capture-templates
-         (quote (("t" "todo (clock)" entry (file cadair-capture-file)
-                  "* TODO %i%?\n" :clock-in t :clock-resume t)
-                 ("x" "note" entry (file cadair-capture-file)
-                  "* TODO %i%?\n" :clock-in nil)
-                 ("L" "Protocol Link" entry (file cadair-capture-file)
-                  "* TODO %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U")
-                 ("p" "Protocol" entry (file cadair-capture-file)
-                  "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                 ("n" "note" entry (file cadair-capture-file)
-                  "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                 ("h" "Habit" entry (file cadair-capture-file)
-                  "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+            ;; This seems to work for protocol setup: http://www.mediaonfire.com/blog/2017_07_21_org_protocol_firefox.html
+            ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+            (require 'org-protocol)
+            (defun transform-square-brackets-to-round-ones(string-to-transform)
+              "Transforms [ into ( and ] into ), other chars left unchanged."
+              (concat
+               (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+              )
+            (setq org-capture-templates
+                  (quote (("t" "todo (clock)" entry (file cadair-capture-file)
+                           "* TODO %i%?\n" :clock-in t :clock-resume t)
+                          ("x" "note" entry (file cadair-capture-file)
+                           "* TODO %i%?\n" :clock-in nil)
+                          ("L" "Protocol Link" entry (file cadair-capture-file)
+                           "* TODO %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U")
+                          ("p" "Protocol" entry (file cadair-capture-file)
+                           "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                          ("n" "note" entry (file cadair-capture-file)
+                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                          ("h" "Habit" entry (file cadair-capture-file)
+                           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+                          ("d" "Day Block Planning" entry (file cadair-year-plan)
+                           "*** %u\n- [ ] Scan emails for new tasks (max 10 mins)\n- [ ] Scan [[https://github.com/notifications][GitHub]] for new tasks (max 10 mins)\n\n**** Plan\n***** Lunch <%<%Y-%m-%d %a 13:00-13:45>>\n\n**** Notes"))))
 
    #+end_src
 
@@ -2557,7 +2577,6 @@ Org-Agenda
              nil))))
     #+end_src
 
-
 ** Waybar
 
 I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager, I like having my clocked in task shown in waybar.
@@ -2607,6 +2626,113 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
      )
 #+end_src
 
+** Planning with Time Blocks
+
+This is cribbed from [[https://mentat.za.net/blog/2026/01/27/org-mode-time-blocks/][Stefan's blog]].
+
+#+begin_src emacs-lisp
+(defun cadair/org-open-year-and-jump-to-today-plan ()
+  (interactive)
+
+  (let ((file-path (expand-file-name cadair-year-plan)))
+    (unless (file-exists-p file-path)
+      (user-error "File does not exist: %s" file-path))
+    (let ((buffer (find-file-noselect file-path)))
+      (pop-to-buffer buffer)
+      (with-current-buffer buffer (stefanv/org-jump-to-today-plan)))))
+
+(defun stefanv/org-jump-to-today-plan ()
+  "Jump to the end of the 'Plan' heading under today's date headline."
+  (interactive)
+  (let* ((today (regexp-quote (format-time-string (org-time-stamp-format nil t))))
+         (today-re (concat "^\\*+ .*?" today)))
+    (goto-char (point-min))
+    (if (not (re-search-forward today-re nil t))
+        (message "Heading matching %s not found." today)
+      (org-reveal)
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        ;; Matches 'Plan' heading and optional trailing tags
+        (if (re-search-forward "^\\*+ Plan\\(?:[ \t]*\\(:[[:alnum:]_@:]+:\\)\\)?[ \t]*$" nil t)
+          (org-end-of-subtree)
+          (widen)
+          (message "No exact 'Plan' heading found under today's date."))))))
+
+(defun stefanv/org-plan-next ()
+  "Create a new day plan entry following on the current or previous lines's active timestamp."
+  (interactive)
+  (let* ((ts-found (save-excursion
+                     (end-of-line)
+                     (when (re-search-backward org-ts-regexp0 nil t)
+                       (let ((ctx (org-element-context)))
+                         (when (eq (org-element-type ctx) 'timestamp) ctx)))))
+         (is-blank (string-blank-p (buffer-substring (line-beginning-position) (line-end-position))))
+         (is-header (org-at-heading-p))
+         ;; Check if the found timestamp is actually on the current line
+         (on-current-line (and ts-found
+                               (>= (org-element-property :begin ts-found)
+                                   (line-beginning-position)))))
+    (if (not ts-found)
+        (user-error "No timestamp found above point")
+      (cond
+       ;; Already has TS OR is plain text -> new heading below
+       ((or on-current-line (and (not is-blank) (not is-header)))
+        (end-of-line)
+        (org-insert-heading)
+        (save-excursion (stefanv/insert-formatted-org-ts ts-found)))
+
+       ;; Current line is blank -> turn into heading here
+       (is-blank
+        (org-insert-heading)
+        (save-excursion (stefanv/insert-formatted-org-ts ts-found)))
+
+       ;; Current line is a header (no TS) -> append TS and return cursor
+       (t
+        (save-excursion
+          (end-of-line)
+          (stefanv/insert-formatted-org-ts ts-found)))))))
+
+(defun stefanv/insert-formatted-org-ts (ts)
+  "Helper to insert formatted timestamp with exactly one preceding space."
+  (just-one-space)
+  (insert (format "<%s %02d:%02d>"
+                  (org-format-timestamp ts "%Y-%m-%d %a")
+                  (or (org-element-property :hour-end ts)
+                      (org-element-property :hour-start ts) 0)
+                  (or (org-element-property :minute-end ts)
+                      (org-element-property :minute-start ts) 0))))
+
+(defun stefanv/org-shift-timestamps-in-region (minutes)
+  "Shift all active timestamps in the region (or current line) forward by MINUTES minutes."
+  (interactive "nMinutes to shift: ")
+  (let* ((region-active (use-region-p))
+         (beg (if region-active (region-beginning) (line-beginning-position)))
+         (end (copy-marker (if region-active (region-end) (line-end-position))))
+         ;; Regex for active timestamps: matches < followed by anything until >
+         (active-ts-re "<\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}.*?\\)>"))
+    ;; Allow undoing everything in one step
+    (atomic-change-group
+      (save-excursion
+        (goto-char beg)
+        ;; Shift active timestamps
+        (while (re-search-forward active-ts-re end t)
+          (save-excursion
+            (goto-char (match-beginning 0))
+            (org-timestamp-change minutes 'minute)
+            (when (fboundp 'org-element-cache-refresh)
+              (org-element-cache-refresh (point)))))
+
+        ;; Re-align tags for any headlines in the range
+        (goto-char beg)
+        (while (re-search-forward org-outline-regexp-bol end t)
+          (org-align-tags))))
+
+    ;; Refresh
+    (font-lock-flush beg end)
+    (set-marker end nil)
+    (message "Shifted active timestamps by %s minutes." minutes)))
+                      #+end_src
 * Matrix
 Because *I can*.
 

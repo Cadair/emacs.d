@@ -284,6 +284,7 @@
     "o" '(:ignore t :wk "Org Mode")
     "o a" '(org-agenda :wk "Agenda")
     "o c" '(org-capture :wk "Capture")
+    "o d" '(cadair/org-open-year-and-jump-to-today-plan :wk "Jump to today's plan")
     "o f" '(consult-org-agenda :wk "Find Agenda Item")
     "o h" '(org-insert-todo-heading :wk "Insert TODO heading")
     "o s" '(org-insert-todo-subheading :wk "Insert TODO subheading")
@@ -1394,6 +1395,10 @@ falling back on searching your PATH."
 
 (use-package zeal-at-point)
 
+(setq cadair-year-plan
+      (expand-file-name (format "~/Notebooks/%s.org"
+                                (format-time-string "%Y"))))
+
 (use-package org
   :defer t
   :custom
@@ -1434,19 +1439,23 @@ falling back on searching your PATH."
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 
 ;; Use the other two org fixes from the vertico readme
-(advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
-(advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
+;; (advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
+;; (advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
 
-(defun vertico-enforce-basic-completion (&rest args)
-  (minibuffer-with-setup-hook
-      (:append
-       (lambda ()
-         (let ((map (make-sparse-keymap)))
-           (define-key map [tab] #'minibuffer-complete)
-           (use-local-map (make-composed-keymap (list map) (current-local-map))))
-         (setq-local completion-styles (cons 'basic completion-styles)
-                     vertico-preselect 'prompt)))
-    (apply args)))
+;; (defun vertico-enforce-basic-completion (&rest args)
+;;   (minibuffer-with-setup-hook
+;;       (:append
+;;        (lambda ()
+;;          (let ((map (make-sparse-keymap)))
+;;            (define-key map [tab] #'minibuffer-complete)
+;;            (use-local-map (make-composed-keymap (list map) (current-local-map))))
+;;          (setq-local completion-styles (cons 'basic completion-styles)
+;;                      vertico-preselect 'prompt)))
+;;     (apply args)))
+
+;; Alternative 2: Complete full paths
+(setq org-refile-use-outline-path 'file
+      org-outline-path-complete-in-steps nil)
 
 (use-package toc-org
   :commands toc-org-enable
@@ -1480,151 +1489,154 @@ falling back on searching your PATH."
        :rev "master"))
 
 (my-local-leader
-  :states '(normal visual)
-  :keymaps 'org-mode-map
+     :states '(normal visual)
+     :keymaps 'org-mode-map
 
-  "#" 'org-update-statistics-cookies
-  "'" 'org-edit-special
-  "*" 'org-ctrl-c-star
-  "+" 'org-ctrl-c-minus
-  "," 'org-switchb
-  "." 'org-goto
-  "@" 'org-cite-insert
-  "." 'consult-org-heading
-  "/" 'consult-org-agenda
-  "A" 'org-archive-subtree-default
-  "e" 'org-export-dispatch
-  "f" 'org-footnote-action
-  "h" 'org-toggle-heading
-  "I" 'org-id-get-create
-  ;; "K" #'+org/remove-result-blocks
-  "n" 'org-store-link
-  "o" 'org-set-property
-  "q" 'org-set-tags-command
-  "r" '(:ignore t :wk "Org Babel")
-  "r b" 'org-babel-execute-buffer
-  "r e" 'org-babel-execute-maybe
-  "r k" 'org-babel-remove-result
-  "t" 'org-todo
-  "T" 'org-todo-list
-  "x" 'org-toggle-checkbox
-  "a" '(:ignore t :wk "Attachments")
-  "a a" 'org-attach
-  "a d" 'org-attach-delete-one
-  "a D" 'org-attach-delete-all
-  ;; "a f" #'+org/find-file-in-attachments
-  ;; "a l" #'+org/attach-file-and-insert-link
-  "a n" 'org-attach-new
-  "a o" 'org-attach-open
-  "a O" 'org-attach-open-in-emacs
-  "a r" 'org-attach-reveal
-  "a R" 'org-attach-reveal-in-emacs
-  "a u" 'org-attach-url
-  "a s" 'org-attach-set-directory
-  "a S" 'org-attach-sync
-  "b" '(:ignore t :wk "Tables")
-  "b -" 'org-table-insert-hline
-  "b a" 'org-table-align
-  "b b" 'org-table-blank-field
-  "b c" 'org-table-create-or-convert-from-region
-  "b e" 'org-table-edit-field
-  "b f" 'org-table-edit-formulas
-  "b h" 'org-table-field-info
-  "b s" 'org-table-sort-lines
-  "b r" 'org-table-recalculate
-  "b R" 'org-table-recalculate-buffer-tables
-  ;; TODO: Figure these sub leader bindings out
-  ;; "b s" '(:ignore t :wk "delete")
-  ;; "b s c" 'org-table-delete-column
-  ;; "b s r" 'org-table-kill-row
-  ;; "b i" '(:ignore t :wk "insert")
-  ;; "b i c" 'org-table-insert-column
-  ;; "b i h" 'org-table-insert-hline
-  ;; "b i r" 'org-table-insert-row
-  ;; "b i H" 'org-table-hline-and-move
-  ;; "b t" '(:ignore t :wk "toggle")
-  ;; "b t f" 'org-table-toggle-formula-debugger
-  ;; "b t o" 'org-table-toggle-coordinate-overlays
-  "c" '(:ignore t :wk "clock")
-  "c c" 'org-clock-cancel
-  "c d" 'org-clock-mark-default-task
-  "c e" 'org-clock-modify-effort-estimate
-  "c E" 'org-set-effort
-  "c g" 'org-clock-goto
-  ;; "c G" (cmd! (org-clock-goto 'select))
-  ;; "c l" #'+org/toggle-last-clock
-  "c i" 'org-clock-in
-  "c I" 'org-clock-in-last
-  "c o" 'org-clock-out
-  "c O" 'cadair/org-clock-out-at-time
-  "c r" 'org-resolve-clocks
-  "c R" 'org-clock-report
-  "c t" 'org-evaluate-time-range
-  "c =" 'org-clock-timestamps-up
-  "c -" 'org-clock-timestamps-down
-  "d" '(:ignore t :wk "date/deadline")
-  "d d" 'org-deadline
-  "d s" 'org-schedule
-  "d t" 'org-time-stamp
-  "d T" 'org-time-stamp-inactive
-  "g" '(:ignore t :wk "goto")
-  "g g" 'org-goto
-  "g g" 'consult-org-heading
-  "g G" 'consult-org-agenda
-  "g c" 'org-clock-goto
-  ;; "g C" (cmd! (org-clock-goto 'select))
-  "g i" 'org-id-goto
-  "g r" 'org-refile-goto-last-stored
-  ;; "g v" #'+org/goto-visible
-  "g x" 'org-capture-goto-last-stored
-  "i" '(:ignore t :wk "Insert")
-  "i b" 'org-insert-structure-template
-  "l" '(:ignore t :wk "links")
-  "l c" 'org-cliplink
-  ;; "l d" #'+org/remove-link
-  "l i" 'org-id-store-link
-  "l l" 'org-insert-link
-  "l L" 'org-insert-all-links
-  "l s" 'org-store-link
-  "l S" 'org-insert-last-stored-link
-  "l t" 'org-toggle-link-display
-  ;; "l y" #'+org/yank-link
-  "P" '(:ignore t :wk "Publish")
-  "P a" 'org-publish-all
-  "P f" 'org-publish-current-file
-  "P p" 'org-publish
-  "P P" 'org-publish-current-project
-  "P s" 'org-publish-sitemap
-  "r" '(:ignore t :wk "refile")
-  ;; "r ." #'+org/refile-to-current-file
-  ;; "r c" #'+org/refile-to-running-clock
-  ;; "r l" #'+org/refile-to-last-location
-  ;; "r f" #'+org/refile-to-file
-  ;; "r o" #'+org/refile-to-other-window
-  ;; "r O" #'+org/refile-to-other-buffer
-  ;; "r v" #'+org/refile-to-visible
-  "r r" 'org-refile
-  "r R" 'org-refile-reverse ; to all `org-refile-targets'
-  "s" '(:ignore t :wk "tree/subtree")
-  "s a" 'org-toggle-archive-tag
-  "s b" 'org-tree-to-indirect-buffer
-  "s c" 'org-clone-subtree-with-time-shift
-  "s d" 'org-cut-subtree
-  "s h" 'org-promote-subtree
-  "s j" 'org-move-subtree-down
-  "s k" 'org-move-subtree-up
-  "s l" 'org-demote-subtree
-  "s n" 'org-narrow-to-subtree
-  "s r" 'org-refile
-  "s s" 'org-sparse-tree
-  "s A" 'org-archive-subtree-default
-  "s N" 'widen
-  "s S" 'org-sort
-  "p" '(:ignore t :wk "priority")
-  "p d" 'org-priority-down
-  "p p" 'org-priority
-  "p u" 'org-priority-up
-  )
+     "#" 'org-update-statistics-cookies
+     "'" 'org-edit-special
+     "*" 'org-ctrl-c-star
+     "+" 'org-ctrl-c-minus
+     "," 'org-switchb
+     "." 'org-goto
+     "@" 'org-cite-insert
+     "." 'consult-org-heading
+     "/" 'consult-org-agenda
+     "A" 'org-archive-subtree-default
+     "e" 'org-export-dispatch
+     "f" 'org-footnote-action
+     "h" 'org-toggle-heading
+     "I" 'org-id-get-create
+     ;; "K" #'+org/remove-result-blocks
+     "n" 'org-store-link
+     "o" 'org-set-property
+     "q" 'org-set-tags-command
+     "r" '(:ignore t :wk "Org Babel")
+     "r b" 'org-babel-execute-buffer
+     "r e" 'org-babel-execute-maybe
+     "r k" 'org-babel-remove-result
+     "t" 'org-todo
+     "T" 'org-todo-list
+     "x" 'org-toggle-checkbox
+     "a" '(:ignore t :wk "Attachments")
+     "a a" 'org-attach
+     "a d" 'org-attach-delete-one
+     "a D" 'org-attach-delete-all
+     ;; "a f" #'+org/find-file-in-attachments
+     ;; "a l" #'+org/attach-file-and-insert-link
+     "a n" 'org-attach-new
+     "a o" 'org-attach-open
+     "a O" 'org-attach-open-in-emacs
+     "a r" 'org-attach-reveal
+     "a R" 'org-attach-reveal-in-emacs
+     "a u" 'org-attach-url
+     "a s" 'org-attach-set-directory
+     "a S" 'org-attach-sync
+     "b" '(:ignore t :wk "Tables")
+     "b -" 'org-table-insert-hline
+     "b a" 'org-table-align
+     "b b" 'org-table-blank-field
+     "b c" 'org-table-create-or-convert-from-region
+     "b e" 'org-table-edit-field
+     "b f" 'org-table-edit-formulas
+     "b h" 'org-table-field-info
+     "b s" 'org-table-sort-lines
+     "b r" 'org-table-recalculate
+     "b R" 'org-table-recalculate-buffer-tables
+     ;; TODO: Figure these sub leader bindings out
+     ;; "b s" '(:ignore t :wk "delete")
+     ;; "b s c" 'org-table-delete-column
+     ;; "b s r" 'org-table-kill-row
+     ;; "b i" '(:ignore t :wk "insert")
+     ;; "b i c" 'org-table-insert-column
+     ;; "b i h" 'org-table-insert-hline
+     ;; "b i r" 'org-table-insert-row
+     ;; "b i H" 'org-table-hline-and-move
+     ;; "b t" '(:ignore t :wk "toggle")
+     ;; "b t f" 'org-table-toggle-formula-debugger
+     ;; "b t o" 'org-table-toggle-coordinate-overlays
+     "c" '(:ignore t :wk "clock")
+     "c c" 'org-clock-cancel
+     "c d" 'org-clock-mark-default-task
+     "c e" 'org-clock-modify-effort-estimate
+     "c E" 'org-set-effort
+     "c g" 'org-clock-goto
+     ;; "c G" (cmd! (org-clock-goto 'select))
+     ;; "c l" #'+org/toggle-last-clock
+     "c i" 'org-clock-in
+     "c I" 'org-clock-in-last
+     "c o" 'org-clock-out
+     "c O" 'cadair/org-clock-out-at-time
+     "c r" 'org-resolve-clocks
+     "c R" 'org-clock-report
+     "c t" 'org-evaluate-time-range
+     "c =" 'org-clock-timestamps-up
+     "c -" 'org-clock-timestamps-down
+     "d" '(:ignore t :wk "date/deadline")
+     "d d" 'org-deadline
+     "d s" 'org-schedule
+     "d t" 'org-time-stamp
+     "d T" 'org-time-stamp-inactive
+     "g" '(:ignore t :wk "goto")
+     "g g" 'org-goto
+     "g g" 'consult-org-heading
+     "g G" 'consult-org-agenda
+     "g c" 'org-clock-goto
+     ;; "g C" (cmd! (org-clock-goto 'select))
+     "g i" 'org-id-goto
+     "g r" 'org-refile-goto-last-stored
+     ;; "g v" #'+org/goto-visible
+     "g x" 'org-capture-goto-last-stored
+     "i" '(:ignore t :wk "Insert")
+     "i b" 'org-insert-structure-template
+     "l" '(:ignore t :wk "links")
+     "l c" 'org-cliplink
+     ;; "l d" #'+org/remove-link
+     "l i" 'org-id-store-link
+     "l l" 'org-insert-link
+     "l L" 'org-insert-all-links
+     "l s" 'org-store-link
+     "l S" 'org-insert-last-stored-link
+     "l t" 'org-toggle-link-display
+     ;; "l y" #'+org/yank-link
+     "P" '(:ignore t :wk "Publish")
+     "P a" 'org-publish-all
+     "P f" 'org-publish-current-file
+     "P p" 'org-publish
+     "P P" 'org-publish-current-project
+     "P s" 'org-publish-sitemap
+     "r" '(:ignore t :wk "refile")
+     ;; "r ." #'+org/refile-to-current-file
+     ;; "r c" #'+org/refile-to-running-clock
+     ;; "r l" #'+org/refile-to-last-location
+     ;; "r f" #'+org/refile-to-file
+     ;; "r o" #'+org/refile-to-other-window
+     ;; "r O" #'+org/refile-to-other-buffer
+     ;; "r v" #'+org/refile-to-visible
+     "r r" 'org-refile
+     "r R" 'org-refile-reverse ; to all `org-refile-targets'
+     "s" '(:ignore t :wk "tree/subtree")
+     "s a" 'org-toggle-archive-tag
+     "s b" 'org-tree-to-indirect-buffer
+     "s c" 'org-clone-subtree-with-time-shift
+     "s d" 'org-cut-subtree
+     "s h" 'org-promote-subtree
+     "s j" 'org-move-subtree-down
+     "s k" 'org-move-subtree-up
+     "s l" 'org-demote-subtree
+     "s n" 'org-narrow-to-subtree
+     "s r" 'org-refile
+     "s s" 'org-sparse-tree
+     "s A" 'org-archive-subtree-default
+     "s N" 'widen
+     "s S" 'org-sort
+     "p" '(:ignore t :wk "priority & plan")
+     "p d" 'org-priority-down
+     "p p" 'org-priority
+     "p u" 'org-priority-up
+     "p n" 'stefanv/org-plan-next
+     "p s
+" 'stefanv/org-shift-timestamps-in-region
+     )
 
 (my-local-leader
   :states '(normal visual)
@@ -1779,7 +1791,9 @@ falling back on searching your PATH."
               ("n" "note" entry (file cadair-capture-file)
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
               ("h" "Habit" entry (file cadair-capture-file)
-               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+              ("d" "Day Block Planning" entry (file cadair-year-plan)
+               "*** %u\n- [ ] Scan emails for new tasks (max 10 mins)\n- [ ] Scan [[https://github.com/notifications][GitHub]] for new tasks (max 10 mins)\n\n**** Plan\n***** Lunch <%<%Y-%m-%d %a 13:00-13:45>>\n\n**** Notes"))))
 
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
@@ -1962,6 +1976,108 @@ falling back on searching your PATH."
   (org-clock-float-email (plist-get (nth 0 (auth-source-search :max 1 :host "api.float.com")) :user))
   (org-clock-float-api-token (auth-info-password (nth 0 (auth-source-search :max 1 :host "api.float.com"))))
   )
+
+(defun cadair/org-open-year-and-jump-to-today-plan ()
+  (interactive)
+
+  (let ((file-path (expand-file-name cadair-year-plan)))
+    (unless (file-exists-p file-path)
+      (user-error "File does not exist: %s" file-path))
+    (let ((buffer (find-file-noselect file-path)))
+      (pop-to-buffer buffer)
+      (with-current-buffer buffer (stefanv/org-jump-to-today-plan)))))
+
+(defun stefanv/org-jump-to-today-plan ()
+  "Jump to the end of the 'Plan' heading under today's date headline."
+  (interactive)
+  (let* ((today (regexp-quote (format-time-string (org-time-stamp-format nil t))))
+         (today-re (concat "^\\*+ .*?" today)))
+    (goto-char (point-min))
+    (if (not (re-search-forward today-re nil t))
+        (message "Heading matching %s not found." today)
+      (org-reveal)
+      (save-restriction
+        (org-narrow-to-subtree)
+        (goto-char (point-min))
+        ;; Matches 'Plan' heading and optional trailing tags
+        (if (re-search-forward "^\\*+ Plan\\(?:[ \t]*\\(:[[:alnum:]_@:]+:\\)\\)?[ \t]*$" nil t)
+          (org-end-of-subtree)
+          (widen)
+          (message "No exact 'Plan' heading found under today's date."))))))
+
+(defun stefanv/org-plan-next ()
+  "Create a new day plan entry following on the current or previous lines's active timestamp."
+  (interactive)
+  (let* ((ts-found (save-excursion
+                     (end-of-line)
+                     (when (re-search-backward org-ts-regexp0 nil t)
+                       (let ((ctx (org-element-context)))
+                         (when (eq (org-element-type ctx) 'timestamp) ctx)))))
+         (is-blank (string-blank-p (buffer-substring (line-beginning-position) (line-end-position))))
+         (is-header (org-at-heading-p))
+         ;; Check if the found timestamp is actually on the current line
+         (on-current-line (and ts-found
+                               (>= (org-element-property :begin ts-found)
+                                   (line-beginning-position)))))
+    (if (not ts-found)
+        (user-error "No timestamp found above point")
+      (cond
+       ;; Already has TS OR is plain text -> new heading below
+       ((or on-current-line (and (not is-blank) (not is-header)))
+        (end-of-line)
+        (org-insert-heading)
+        (save-excursion (stefanv/insert-formatted-org-ts ts-found)))
+
+       ;; Current line is blank -> turn into heading here
+       (is-blank
+        (org-insert-heading)
+        (save-excursion (stefanv/insert-formatted-org-ts ts-found)))
+
+       ;; Current line is a header (no TS) -> append TS and return cursor
+       (t
+        (save-excursion
+          (end-of-line)
+          (stefanv/insert-formatted-org-ts ts-found)))))))
+
+(defun stefanv/insert-formatted-org-ts (ts)
+  "Helper to insert formatted timestamp with exactly one preceding space."
+  (just-one-space)
+  (insert (format "<%s %02d:%02d>"
+                  (org-format-timestamp ts "%Y-%m-%d %a")
+                  (or (org-element-property :hour-end ts)
+                      (org-element-property :hour-start ts) 0)
+                  (or (org-element-property :minute-end ts)
+                      (org-element-property :minute-start ts) 0))))
+
+(defun stefanv/org-shift-timestamps-in-region (minutes)
+  "Shift all active timestamps in the region (or current line) forward by MINUTES minutes."
+  (interactive "nMinutes to shift: ")
+  (let* ((region-active (use-region-p))
+         (beg (if region-active (region-beginning) (line-beginning-position)))
+         (end (copy-marker (if region-active (region-end) (line-end-position))))
+         ;; Regex for active timestamps: matches < followed by anything until >
+         (active-ts-re "<\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}.*?\\)>"))
+    ;; Allow undoing everything in one step
+    (atomic-change-group
+      (save-excursion
+        (goto-char beg)
+        ;; Shift active timestamps
+        (while (re-search-forward active-ts-re end t)
+          (save-excursion
+            (goto-char (match-beginning 0))
+            (org-timestamp-change minutes 'minute)
+            (when (fboundp 'org-element-cache-refresh)
+              (org-element-cache-refresh (point)))))
+
+        ;; Re-align tags for any headlines in the range
+        (goto-char beg)
+        (while (re-search-forward org-outline-regexp-bol end t)
+          (org-align-tags))))
+
+    ;; Refresh
+    (font-lock-flush beg end)
+    (set-marker end nil)
+    (message "Shifted active timestamps by %s minutes." minutes)))
 
 (use-package ement)
 
