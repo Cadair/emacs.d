@@ -667,24 +667,25 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   )
 
 ;; Filter Buffers for Consult-Buffer
-(with-eval-after-load 'consult
-  ;; hide full buffer list (still available with "b" prefix)
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  ;; set consult-workspace buffer list
-  (defvar consult--source-workspace
-    (list :name     "Workspace Buffers"
-          :narrow   ?w
-          :history  'buffer-name-history
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :default  t
-          :items    (lambda () (consult--buffer-query
-                                :predicate #'tabspaces--local-buffer-p
-                                :sort 'visibility
-                                :as #'buffer-name)))
 
-    "Set workspace buffer list for consult-buffer.")
-  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+;; (with-eval-after-load 'consult
+;; ;; hide full buffer list (still available with "b" prefix)
+;; (consult-customize consult-source-buffer :hidden t :default nil)
+;; ;; set consult-workspace buffer list
+;; (defvar consult--source-workspace
+;;   (list :name     "Workspace Buffers"
+;;         :narrow   ?w
+;;         :history  'buffer-name-history
+;;         :category 'buffer
+;;         :state    #'consult--buffer-state
+;;         :default  t
+;;         :items    (lambda () (consult--buffer-query
+;;                          :predicate #'tabspaces--local-buffer-p
+;;                          :sort 'visibility
+;;                          :as #'buffer-name)))
+
+;;   "Set workspace buffer list for consult-buffer.")
+;; (add-to-list 'consult-buffer-sources 'consult--source-workspace))
 
 (defun get-python-env-root ()
   "Return the value of `python-shell-virtualenv-root` if defined, otherwise nil."
@@ -1203,7 +1204,6 @@ falling back on searching your PATH."
 (use-package vertico
   :init
   (vertico-mode)
-  (vertico-multiform-mode 1)
   :custom
   (vertico-count 20)
   )
@@ -1229,72 +1229,18 @@ falling back on searching your PATH."
 (savehist-mode) ;; Enables save history mode
 
 (use-package marginalia
-  :after vertico
-  :init
-  (marginalia-mode))
+ :after vertico
+ :init
+ (marginalia-mode))
 
-(use-package nerd-icons-completion
-  :after marginalia
-  :config
-  (nerd-icons-completion-mode)
-  :hook
-  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
+;; (use-package nerd-icons-completion
+;;  :after marginalia
+;;  :config
+;;  (nerd-icons-completion-mode)
+;;  :hook
+;;  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
 
-(use-package consult
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5 ;(use-package vertico-posframe
-    
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  :config
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  ;; (consult-customize
-  ;; consult-theme :preview-key '(:debounce 0.2 any)
-  ;; consult-ripgrep consult-git-grep consult-grep
-  ;; consult-bookmark consult-recent-file consult-xref
-  ;; consult--source-bookmark consult--source-file-register
-  ;; consult--source-recent-file consult--source-project-recent-file
-  ;; :preview-key "M-."
-  ;; :preview-key '(:debounce 0.4 any))
-
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-   ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-   ;;;; 2. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-   ;;;; 3. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-   ;;;; 4. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-   ;;;; 5. No project support
-  ;; (setq consult-project-function nil)
-  )
-
-;; (use-package consult-eglot)
-
-(use-package symbols-outline)
+(use-package consult)
 
 (use-package diminish)
 

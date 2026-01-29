@@ -65,3 +65,4 @@ tabsession.el
 /straight
 /request
 .chatgpt-shell.el
+.*tabspaces-session.el
