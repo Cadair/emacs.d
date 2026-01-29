@@ -75,7 +75,7 @@ in {
       text = ''
         #!/bin/sh
         # Setup info here: http://www.mediaonfire.com/blog/2017_07_21_org_protocol_firefox.html
-        ${cfg.emacs-package.out}/bin/emacsclient -c -F "((name . \"emacs-capture\") (title . \"emacs-capture\") (height . 15) (width . 110))" "$@" &
+        ${cfg.emacs-package.out}/bin/emacsclient -c -F "((name . \"emacs-capture\") (title . \"emacs-capture\") (height . 30) (width . 110))" "$@" &
         '';
     };
 
