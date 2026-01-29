@@ -61,7 +61,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#corfu][Corfu]]
   - [[#cape][Cape]]
   - [[#orderless][Orderless]]
-  - [[#vertico-and-marginalia][Vertico and Marginalia]]
+  - [[#vertico-and-marginalia-use-package-vertico-posframe][Vertico and Marginalia ;(use-package vertico-posframe]]
   - [[#consult][Consult]]
   - [[#diminish][Diminish]]
   - [[#rainbow-delimiters][Rainbow Delimiters]]
@@ -467,6 +467,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "q r" '((lambda () (interactive)
               (load-file user-init-file))
             :wk "Reload Emacs config")
+    "q u" '(package-upgrade-all :wk "Upgrade all packages")
     )
 
   (start/leader-keys
@@ -1607,7 +1608,8 @@ Recomended for packages like vertico, corfu.
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
-** Vertico and Marginalia
+** Vertico and Marginalia ;(use-package vertico-posframe
+    
   - Vertico: Provides a performant and minimalistic vertical completion UI based on the default completion system.
   - Savehist: Saves completion history.
   - Marginalia: Adds extra metadata for completions in the margins (like descriptions).
@@ -1624,22 +1626,23 @@ Recomended for packages like vertico, corfu.
       (vertico-count 20)
       )
 
-    (use-package vertico-posframe
-      :init
-      (setq vertico-posframe-parameters   '((left-fringe  . 12)    ;; Fringes
-                                            (right-fringe . 12)
-                                            (undecorated  . nil))) ;; Rounded frame
-      :config
-      (vertico-posframe-mode 1)
-      :custom
-      (vertico-posframe-width        120)                      ;; Narrow frame
-      (vertico-posframe-height       vertico-count)            ;; Default height
-      ;; Don't create posframe for these commands
-      (vertico-multiform-commands    '((consult-line    (:not posframe))
-                                       (consult-ripgrep (:not posframe))
-                                       (consult-imenu   (:not posframe)))
-                                     )
-      )
+    ;; (use-package vertico-posframe
+    ;;   :init
+    ;;   (setq vertico-posframe-parameters   '((left-fringe  . 12)    ;; Fringes
+    ;;                                         (right-fringe . 12)
+    ;;                                         (undecorated  . nil))) ;; Rounded frame
+    ;;   :config
+    ;;   (vertico-posframe-mode 1)
+    ;;   :custom
+    ;;   (vertico-posframe-width        120)                      ;; Narrow frame
+    ;;   (vertico-posframe-height       vertico-count)            ;; Default height
+    ;;   ;; Don't create posframe for these commands
+    ;;   (vertico-multiform-commands    '((consult-line    (:not posframe))
+    ;;                                    (consult-ripgrep (:not posframe))
+    ;;                                    (consult-imenu   (:not posframe))
+    ;;                                    (org-refile-get-location   (:not posframe)))
+    ;;                                  )
+    ;;   )
 
     (savehist-mode) ;; Enables save history mode
 
@@ -1668,7 +1671,8 @@ Check out their [[https://github.com/minad/consult][git repository]] for more aw
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
+  (setq register-preview-delay 0.5 ;(use-package vertico-posframe
+    
         register-preview-function #'consult-register-format)
 
   ;; Optionally tweak the register preview window.
@@ -1718,7 +1722,7 @@ Things for interacting with workspace/symbols in lsp land, but as pylsp dosen't 
 https://github.com/mohkale/consult-eglot
 
 #+begin_src emacs-lisp
-(use-package consult-eglot)
+;; (use-package consult-eglot)
 #+end_src
 
 https://github.com/emacsmirror/symbols-outline
@@ -1983,8 +1987,8 @@ See https://github.com/minad/vertico?tab=readme-ov-file#problematic-completion-c
 
 #+begin_src emacs-lisp
 ;; Use the other two org fixes from the vertico readme
-;; (advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
-;; (advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
+(advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
+(advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
 
 ;; (defun vertico-enforce-basic-completion (&rest args)
 ;;   (minibuffer-with-setup-hook
@@ -2416,15 +2420,15 @@ Org-Agenda
 ** Refile
 
    #+begin_src emacs-lisp
-   ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-   (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                    (org-agenda-files :maxlevel . 9))))
+   ; Targets include this file and any file contributing to the agenda 
+   (setq org-refile-targets (quote ((nil :maxlevel . 7)
+                                    (org-agenda-files :maxlevel . 7))))
 
    ;; Use outline path file and complete in steps
    ;; this helps vertico work properly
-   (setq org-refile-use-outline-path 'file)
+   ;; (setq org-refile-use-outline-path 'file)
 
-   (setq org-outline-path-complete-in-steps nil)
+   ;; (setq org-outline-path-complete-in-steps nil)
 
    ; Allow refile to create parent tasks with confirmation
    (setq org-refile-allow-creating-parent-nodes (quote confirm))

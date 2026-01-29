@@ -323,6 +323,7 @@
     "q r" '((lambda () (interactive)
               (load-file user-init-file))
             :wk "Reload Emacs config")
+    "q u" '(package-upgrade-all :wk "Upgrade all packages")
     )
 
   (start/leader-keys
@@ -1207,22 +1208,23 @@ falling back on searching your PATH."
   (vertico-count 20)
   )
 
-(use-package vertico-posframe
-  :init
-  (setq vertico-posframe-parameters   '((left-fringe  . 12)    ;; Fringes
-                                        (right-fringe . 12)
-                                        (undecorated  . nil))) ;; Rounded frame
-  :config
-  (vertico-posframe-mode 1)
-  :custom
-  (vertico-posframe-width        120)                      ;; Narrow frame
-  (vertico-posframe-height       vertico-count)            ;; Default height
-  ;; Don't create posframe for these commands
-  (vertico-multiform-commands    '((consult-line    (:not posframe))
-                                   (consult-ripgrep (:not posframe))
-                                   (consult-imenu   (:not posframe)))
-                                 )
-  )
+;; (use-package vertico-posframe
+;;   :init
+;;   (setq vertico-posframe-parameters   '((left-fringe  . 12)    ;; Fringes
+;;                                         (right-fringe . 12)
+;;                                         (undecorated  . nil))) ;; Rounded frame
+;;   :config
+;;   (vertico-posframe-mode 1)
+;;   :custom
+;;   (vertico-posframe-width        120)                      ;; Narrow frame
+;;   (vertico-posframe-height       vertico-count)            ;; Default height
+;;   ;; Don't create posframe for these commands
+;;   (vertico-multiform-commands    '((consult-line    (:not posframe))
+;;                                    (consult-ripgrep (:not posframe))
+;;                                    (consult-imenu   (:not posframe))
+;;                                    (org-refile-get-location   (:not posframe)))
+;;                                  )
+;;   )
 
 (savehist-mode) ;; Enables save history mode
 
@@ -1246,7 +1248,8 @@ falling back on searching your PATH."
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
+  (setq register-preview-delay 0.5 ;(use-package vertico-posframe
+    
         register-preview-function #'consult-register-format)
 
   ;; Optionally tweak the register preview window.
@@ -1289,7 +1292,7 @@ falling back on searching your PATH."
   ;; (setq consult-project-function nil)
   )
 
-(use-package consult-eglot)
+;; (use-package consult-eglot)
 
 (use-package symbols-outline)
 
@@ -1439,8 +1442,8 @@ falling back on searching your PATH."
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 
 ;; Use the other two org fixes from the vertico readme
-;; (advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
-;; (advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
+(advice-add #'org-make-tags-matcher :around #'vertico-enforce-basic-completion)
+(advice-add #'org-agenda-filter :around #'vertico-enforce-basic-completion)
 
 ;; (defun vertico-enforce-basic-completion (&rest args)
 ;;   (minibuffer-with-setup-hook
@@ -1796,15 +1799,15 @@ falling back on searching your PATH."
               ("d" "Day Block Planning" entry (file cadair-year-plan)
                "*** %u\n- [ ] Scan emails for new tasks (max 10 mins)\n- [ ] Scan [[https://github.com/notifications][GitHub]] for new tasks (max 10 mins)\n\n**** Plan\n***** Dropoff <%<%Y-%m-%d %a 09:00-09:15>>\n***** Aperio Standup <%<%Y-%m-%d %a 10:00-10:15>>\n***** Lunch <%<%Y-%m-%d %a 13:00-13:45>>\n\n**** Notes"))))
 
-; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
+; Targets include this file and any file contributing to the agenda 
+(setq org-refile-targets (quote ((nil :maxlevel . 7)
+                                 (org-agenda-files :maxlevel . 7))))
 
 ;; Use outline path file and complete in steps
 ;; this helps vertico work properly
-(setq org-refile-use-outline-path 'file)
+;; (setq org-refile-use-outline-path 'file)
 
-(setq org-outline-path-complete-in-steps nil)
+;; (setq org-outline-path-complete-in-steps nil)
 
 ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
