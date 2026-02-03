@@ -1788,8 +1788,8 @@ falling back on searching your PATH."
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
               ("h" "Habit" entry (file cadair-capture-file)
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-              ("d" "Day Block Planning" entry (file cadair-year-plan)
-               "*** %u\n- [ ] Scan emails for new tasks (max 10 mins)\n- [ ] Scan [[https://github.com/notifications][GitHub]] for new tasks (max 10 mins)\n\n**** Plan\n***** Dropoff <%<%Y-%m-%d %a 09:00-09:15>>\n***** Aperio Standup <%<%Y-%m-%d %a 10:00-10:15>>\n***** Lunch <%<%Y-%m-%d %a 13:00-13:45>>\n\n**** Notes"))))
+              ("d" "Day Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/day_block.org") :empty-lines 1)
+              ("w" "Week Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/week_block.org") :empty-lines 1))))
 
 ; Targets include this file and any file contributing to the agenda 
 (setq org-refile-targets (quote ((nil :maxlevel . 7)
@@ -1947,7 +1947,7 @@ falling back on searching your PATH."
               (format "%s" (org-clock-waybar--get-tags)))))
 
 (use-package org-clock-waybar
-  :vc (:url "https://gitea.polonkai.eu/gergely/org-clock-waybar.git" :rev "configurable-output")
+  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "org-mode-9-error")
   :config
   (org-clock-waybar-setup)
   :custom

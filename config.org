@@ -2362,44 +2362,44 @@ Org-Agenda
    I have a bunch of custom capture stuff which pops frames from emacsd and other config.
 
    #+begin_src emacs-lisp
-            (defadvice org-capture
-                (after make-full-window-frame activate)
-              "Advise capture to be the only window when used as a popup"
-              (if (equal "emacs-capture" (frame-parameter nil 'name))
-                  (delete-other-windows)))
+   (defadvice org-capture
+       (after make-full-window-frame activate)
+     "Advise capture to be the only window when used as a popup"
+     (if (equal "emacs-capture" (frame-parameter nil 'name))
+         (delete-other-windows)))
 
-            (defadvice org-capture-finalize
-                (after delete-capture-frame activate)
-              "Advise capture-finalize to close the frame"
-              (if (equal "emacs-capture" (frame-parameter nil 'name))
-                  (delete-frame)))
+   (defadvice org-capture-finalize
+       (after delete-capture-frame activate)
+     "Advise capture-finalize to close the frame"
+     (if (equal "emacs-capture" (frame-parameter nil 'name))
+         (delete-frame)))
 
-            (defvar cadair-capture-file "~/Notebooks/refile.org")
-            (setq org-default-notes-file cadair-capture-file)
+   (defvar cadair-capture-file "~/Notebooks/refile.org")
+   (setq org-default-notes-file cadair-capture-file)
 
-            ;; This seems to work for protocol setup: http://www.mediaonfire.com/blog/2017_07_21_org_protocol_firefox.html
-            ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-            (require 'org-protocol)
-            (defun transform-square-brackets-to-round-ones(string-to-transform)
-              "Transforms [ into ( and ] into ), other chars left unchanged."
-              (concat
-               (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
-              )
-            (setq org-capture-templates
-                  (quote (("t" "todo (clock)" entry (file cadair-capture-file)
-                           "* TODO %i%?\n" :clock-in t :clock-resume t)
-                          ("x" "note" entry (file cadair-capture-file)
-                           "* TODO %i%?\n" :clock-in nil)
-                          ("L" "Protocol Link" entry (file cadair-capture-file)
-                           "* TODO %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U")
-                          ("p" "Protocol" entry (file cadair-capture-file)
-                           "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                          ("n" "note" entry (file cadair-capture-file)
-                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                          ("h" "Habit" entry (file cadair-capture-file)
-                           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-                          ("d" "Day Block Planning" entry (file cadair-year-plan)
-                           "*** %u\n- [ ] Scan emails for new tasks (max 10 mins)\n- [ ] Scan [[https://github.com/notifications][GitHub]] for new tasks (max 10 mins)\n\n**** Plan\n***** Dropoff <%<%Y-%m-%d %a 09:00-09:15>>\n***** Aperio Standup <%<%Y-%m-%d %a 10:00-10:15>>\n***** Lunch <%<%Y-%m-%d %a 13:00-13:45>>\n\n**** Notes"))))
+   ;; This seems to work for protocol setup: http://www.mediaonfire.com/blog/2017_07_21_org_protocol_firefox.html
+   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+   (require 'org-protocol)
+   (defun transform-square-brackets-to-round-ones(string-to-transform)
+     "Transforms [ into ( and ] into ), other chars left unchanged."
+     (concat
+      (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+     )
+   (setq org-capture-templates
+         (quote (("t" "todo (clock)" entry (file cadair-capture-file)
+                  "* TODO %i%?\n" :clock-in t :clock-resume t)
+                 ("x" "note" entry (file cadair-capture-file)
+                  "* TODO %i%?\n" :clock-in nil)
+                 ("L" "Protocol Link" entry (file cadair-capture-file)
+                  "* TODO %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured On: %U")
+                 ("p" "Protocol" entry (file cadair-capture-file)
+                  "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                 ("n" "note" entry (file cadair-capture-file)
+                  "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                 ("h" "Habit" entry (file cadair-capture-file)
+                  "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+                 ("d" "Day Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/day_block.org") :empty-lines 1)
+                 ("w" "Week Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/week_block.org") :empty-lines 1))))
 
    #+end_src
 
@@ -2584,7 +2584,7 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
               (format "%s" (org-clock-waybar--get-tags)))))
 
 (use-package org-clock-waybar
-  :vc (:url "https://gitea.polonkai.eu/gergely/org-clock-waybar.git" :rev "configurable-output")
+  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "org-mode-9-error")
   :config
   (org-clock-waybar-setup)
   :custom
