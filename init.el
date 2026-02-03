@@ -1947,7 +1947,7 @@ falling back on searching your PATH."
               (format "%s" (org-clock-waybar--get-tags)))))
 
 (use-package org-clock-waybar
-  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "org-mode-9-error")
+  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "configurable-output")
   :config
   (org-clock-waybar-setup)
   :custom

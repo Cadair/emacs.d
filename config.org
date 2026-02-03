@@ -2584,7 +2584,7 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
               (format "%s" (org-clock-waybar--get-tags)))))
 
 (use-package org-clock-waybar
-  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "org-mode-9-error")
+  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "configurable-output")
   :config
   (org-clock-waybar-setup)
   :custom
