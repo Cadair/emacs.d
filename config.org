@@ -90,6 +90,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#waybar][Waybar]]
   - [[#org-clock-float][Org Clock Float]]
   - [[#planning-with-time-blocks][Planning with Time Blocks]]
+  - [[#caldav][CalDAV]]
 - [[#matrix][Matrix]]
 - [[#other-things][Other things]]
   - [[#emacs-everywhere][Emacs Everywhere]]
@@ -2687,6 +2688,11 @@ This helper is a way of inserting links to other org headings quickly, so I can 
     (let ((link (concat "file:" file "::*" heading)))
       (insert (concat "[[" link "][" heading "]]")))))
 #+end_src
+
+** TODO CalDAV
+
+https://jackkamm.neocities.org/org-caldav-manual/
+
 * Matrix
 Because *I can*.
 
