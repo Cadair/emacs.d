@@ -128,7 +128,7 @@
     "SPC" '(execute-extended-command :wk "M-x")
     "." '(find-file :wk "Find file")
     "TAB" '(evil-switch-to-windows-last-buffer :wk "Last buffer")
-    "/" '(consult-ripgrep :wk "Search Project")
+    "/" '(consult-git-grep :wk "Search Project")
     )
 
   (start/leader-keys
@@ -1233,58 +1233,12 @@ falling back on searching your PATH."
  :init
  (marginalia-mode))
 
-;; (use-package nerd-icons-completion
-;;  :after marginalia
-;;  :config
-;;  (nerd-icons-completion-mode)
-;;  :hook
-;;  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
-
-(use-package mini-popup
-  :vc (:url "https://github.com/minad/mini-popup.git"
-       :rev "main"))
-;; Configure a height function (Example for Vertico)
-(defun mini-popup-height-resize ()
-  (* (1+ (min vertico--total vertico-count)) (default-line-height)))
-(defun mini-popup-height-fixed ()
-  (* (1+ (if vertico--input vertico-count 0)) (default-line-height)))
-(setq mini-popup--height-function #'mini-popup-height-fixed)
-
-;; Disable the minibuffer resizing of Vertico (HACK)
-(advice-add #'vertico--resize-window :around
-            (lambda (&rest args)
-              (unless mini-popup-mode
-                (apply args))))
-
-;; Ensure that the popup is updated after refresh (Consult-specific)
-(add-hook 'consult--completion-refresh-hook
-          (lambda (&rest _) (mini-popup--setup)) 99)
-(mini-popup-mode)
-(setq mini-popup--frame-parameters
-   '((no-accept-focus . t)
-    (no-focus-on-map . t)
-    (min-width . t)
-    (min-height . t)
-    (top . 0.4)
-    (left . 0.5)
-    (width . 0.5)
-    (height . 0.25)
-    (border-width . 0)
-    (child-frame-border-width . 1)
-    (left-fringe . 20)
-    (right-fringe . 20)
-    (vertical-scroll-bars . nil)
-    (horizontal-scroll-bars . nil)
-    (menu-bar-lines . 0)
-    (tool-bar-lines . 0)
-    (tab-bar-lines . 0)
-    (no-other-frame . t)
-    (unsplittable . t)
-    (undecorated . t)
-    (cursor-type . t)
-    (visibility . nil)
-    (no-special-glyphs . t)
-    (desktop-dont-save . t)))
+(use-package nerd-icons-completion
+ :after marginalia
+ :config
+ (nerd-icons-completion-mode)
+ :hook
+ ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
 
 (use-package consult)
 
@@ -1384,9 +1338,6 @@ falling back on searching your PATH."
   :custom
   (shell-file-name "xonsh")
   )
-
-(use-package chatgpt-shell
-  :ensure t)
 
 (use-package zeal-at-point)
 

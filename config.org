@@ -62,7 +62,6 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#cape][Cape]]
   - [[#orderless][Orderless]]
   - [[#vertico-and-marginalia][Vertico and Marginalia]]
-  - [[#popup-minibuffer][Popup minibuffer]]
   - [[#consult][Consult]]
   - [[#diminish][Diminish]]
   - [[#rainbow-delimiters][Rainbow Delimiters]]
@@ -75,7 +74,6 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#evil-nerd-commenter][Evil-nerd-commenter]]
   - [[#indent-guides][Indent guides]]
   - [[#eat---terminal][EAT - Terminal]]
-  - [[#llm][LLM]]
   - [[#zeal][Zeal]]
 - [[#org-mode][Org Mode]]
   - [[#visuals][Visuals]]
@@ -273,7 +271,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "SPC" '(execute-extended-command :wk "M-x")
     "." '(find-file :wk "Find file")
     "TAB" '(evil-switch-to-windows-last-buffer :wk "Last buffer")
-    "/" '(consult-ripgrep :wk "Search Project")
+    "/" '(consult-git-grep :wk "Search Project")
     )
 
   (start/leader-keys
@@ -1653,70 +1651,21 @@ Recomended for packages like vertico, corfu.
      :init
      (marginalia-mode))
 
-    ;; (use-package nerd-icons-completion
-    ;;  :after marginalia
-    ;;  :config
-    ;;  (nerd-icons-completion-mode)
-    ;;  :hook
-    ;;  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
+    (use-package nerd-icons-completion
+     :after marginalia
+     :config
+     (nerd-icons-completion-mode)
+     :hook
+     ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
     #+end_src
-** Popup minibuffer
 
-vertico posframe is awesome, apart from the fact it hangs emacs when using org-refile apparently.
-
-#+begin_src emacs-lisp
-(use-package mini-popup
-  :vc (:url "https://github.com/minad/mini-popup.git"
-       :rev "main"))
-;; Configure a height function (Example for Vertico)
-(defun mini-popup-height-resize ()
-  (* (1+ (min vertico--total vertico-count)) (default-line-height)))
-(defun mini-popup-height-fixed ()
-  (* (1+ (if vertico--input vertico-count 0)) (default-line-height)))
-(setq mini-popup--height-function #'mini-popup-height-fixed)
-
-;; Disable the minibuffer resizing of Vertico (HACK)
-(advice-add #'vertico--resize-window :around
-            (lambda (&rest args)
-              (unless mini-popup-mode
-                (apply args))))
-
-;; Ensure that the popup is updated after refresh (Consult-specific)
-(add-hook 'consult--completion-refresh-hook
-          (lambda (&rest _) (mini-popup--setup)) 99)
-(mini-popup-mode)
-(setq mini-popup--frame-parameters
-   '((no-accept-focus . t)
-    (no-focus-on-map . t)
-    (min-width . t)
-    (min-height . t)
-    (top . 0.4)
-    (left . 0.5)
-    (width . 0.5)
-    (height . 0.25)
-    (border-width . 0)
-    (child-frame-border-width . 1)
-    (left-fringe . 20)
-    (right-fringe . 20)
-    (vertical-scroll-bars . nil)
-    (horizontal-scroll-bars . nil)
-    (menu-bar-lines . 0)
-    (tool-bar-lines . 0)
-    (tab-bar-lines . 0)
-    (no-other-frame . t)
-    (unsplittable . t)
-    (undecorated . t)
-    (cursor-type . t)
-    (visibility . nil)
-    (no-special-glyphs . t)
-    (desktop-dont-save . t)))
-#+end_src
 ** Consult
 Provides search and navigation commands based on the Emacs completion function.
 Check out their [[https://github.com/minad/consult][git repository]] for more awesome functions.
 #+begin_src emacs-lisp
 (use-package consult)
 #+end_src
+
 ** Diminish
 This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.
 With this package installed, you can add ‘:diminish’ to any use-package block to hide that particular mode in the modeline.
@@ -1856,14 +1805,6 @@ This auto-detect is taken from here: https://www.emacswiki.org/emacs/FlySpell#h5
   :custom
   (shell-file-name "xonsh")
   )
-#+end_src
-
-** LLM
-
-#+begin_src emacs-lisp
-(use-package chatgpt-shell
-  :ensure t)
-
 #+end_src
 
 ** Zeal
