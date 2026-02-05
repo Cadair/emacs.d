@@ -24,6 +24,7 @@ in {
       unstable.python313Packages.python-lsp-server
       unstable.python313Packages.ruff
       unstable.python313Packages.pylsp-mypy
+      unstable.ty
       # spelling
       ispell
       # nix lsp

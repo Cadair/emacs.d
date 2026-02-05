@@ -953,26 +953,31 @@ Use visual block to uncomment easily in Org documents (C-v).
   (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs '(python-ts-mode . ("ty" "server")))
   :custom
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
   (eglot-autoshutdown t);; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
 
+  (eglot-workspace-configuration '(:ty (:diagnosticMode "off")))
   ;; Dynamically load the workspace configuration so that we set jedi to use the active workspace
-  (eglot-workspace-configuration
-   (lambda (&rest args)
-     (let ((venv-directory (get-python-env-root)))
-       (message "Located venv: %s" venv-directory)
-       `((:pylsp .
-                 (:plugins
-                  (:jedi_completion (:fuzzy t)
-                                    :jedi (:environment ,venv-directory)
-                                    :pydocstyle (:enabled nil)
-                                    :pycodestyle (:enabled nil)
-                                    :mccabe (:enabled nil)
-                                    :pyflakes (:enabled nil)
-                                    :flake8 (:enabled nil)
-                                    :black (:enabled nil))))))))
+  ;; (eglot-workspace-configuration
+  ;;  (lambda (&rest args)
+  ;;    (let ((venv-directory (get-python-env-root)))
+  ;;      (message "Located venv: %s" venv-directory)
+  ;;      `((:ty .
+  ;;             (:diagnosticMode "off"))
+  ;;        (:pylsp .
+  ;;                (:plugins
+  ;;                 (:jedi_completion (:fuzzy t)
+  ;;                                   :jedi (:environment ,venv-directory)
+  ;;                                   :pydocstyle (:enabled nil)
+  ;;                                   :pycodestyle (:enabled nil)
+  ;;                                   :mccabe (:enabled nil)
+  ;;                                   :pyflakes (:enabled nil)
+  ;;                                   :flake8 (:enabled nil)
+  ;;                                   :black (:enabled nil))))))))
   )
 #+end_src
 
