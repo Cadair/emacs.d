@@ -665,24 +665,26 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (tabspaces-session-auto-restore nil)
   (tab-bar-new-tab-choice "*scratch*")
   )
-;; (with-eval-after-load 'consult
-;;   ;; hide full buffer list (still available with "b" prefix)
-;;   (eval '(consult-customize consult-source-buffer :hidden t :default nil))
-;;   ;; set consult-workspace buffer list
-;;   (defvar consult--source-workspace
-;;   (list :name     "Workspace Buffers"
-;;           :narrow   ?w
-;;           :history  'buffer-name-history
-;;           :category 'buffer
-;;           :state    #'consult--buffer-state
-;;           :default  t
-;;           :items    (lambda () (consult--buffer-query
-;;                           :predicate #'tabspaces--local-buffer-p
-;;                           :sort 'visibility
-;;                           :as #'buffer-name)))
 
-;;   "Set workspace buffer list for consult-buffer.")
-;;   (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+(with-eval-after-load 'consult
+  ;; Hide full buffer list (still available with "b" prefix)
+  (plist-put consult-source-buffer :hidden t)
+  (plist-put consult-source-buffer :default nil)
+
+  ;; set consult-workspace buffer list
+  (defvar consult--source-workspace
+    (list :name     "Workspace Buffers"
+          :narrow   ?w
+          :history  'buffer-name-history
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :default  t
+          :items    (lambda () (consult--buffer-query
+                           :predicate #'tabspaces--local-buffer-p
+                           :sort 'visibility
+                           :as #'buffer-name)))
+    "Set workspace buffer list for consult-buffer.")
+  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
 
 (defun get-python-env-root ()
   "Return the value of `python-shell-virtualenv-root` if defined, otherwise nil."
@@ -709,24 +711,23 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (eglot-autoshutdown t);; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
 
-  (eglot-workspace-configuration '(:ty (:diagnosticMode "off")))
+  ;; (eglot-workspace-configuration '(:ty (:diagnosticMode "off")))
   ;; Dynamically load the workspace configuration so that we set jedi to use the active workspace
-  ;; (eglot-workspace-configuration
-  ;;  (lambda (&rest args)
-  ;;    (let ((venv-directory (get-python-env-root)))
-  ;;      (message "Located venv: %s" venv-directory)
-  ;;      `((:ty .
-  ;;             (:diagnosticMode "off"))
-  ;;        (:pylsp .
-  ;;                (:plugins
-  ;;                 (:jedi_completion (:fuzzy t)
-  ;;                                   :jedi (:environment ,venv-directory)
-  ;;                                   :pydocstyle (:enabled nil)
-  ;;                                   :pycodestyle (:enabled nil)
-  ;;                                   :mccabe (:enabled nil)
-  ;;                                   :pyflakes (:enabled nil)
-  ;;                                   :flake8 (:enabled nil)
-  ;;                                   :black (:enabled nil))))))))
+  (eglot-workspace-configuration
+   (lambda (&rest args)
+     (let ((venv-directory (get-python-env-root)))
+       (message "Located venv: %s" venv-directory)
+       `((:ty (:diagnosticMode "off"))
+         (:pylsp .
+                 (:plugins
+                  (:jedi_completion (:fuzzy t)
+                                    :jedi (:environment ,venv-directory)
+                                    :pydocstyle (:enabled nil)
+                                    :pycodestyle (:enabled nil)
+                                    :mccabe (:enabled nil)
+                                    :pyflakes (:enabled nil)
+                                    :flake8 (:enabled nil)
+                                    :black (:enabled nil))))))))
   )
 
 (defun restart-eglot ()

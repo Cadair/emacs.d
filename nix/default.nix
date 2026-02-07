@@ -47,7 +47,7 @@ in {
     programs.emacs = {
       enable = true;
       package = cfg.emacs-package;
-      extraPackages = epkgs: [ epkgs.tree-sitter epkgs.tree-sitter-langs epkgs.treesit-grammars.with-all-grammars epkgs.nerd-icons ];
+      extraPackages = epkgs: [ epkgs.tree-sitter epkgs.tree-sitter-langs epkgs.treesit-grammars.with-all-grammars epkgs.nerd-icons epkgs.nerd-icons-completion ];
     };
 
     # consider having init.el built from config.org automatically here
