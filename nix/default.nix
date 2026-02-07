@@ -1,4 +1,6 @@
 {
+  cadairEmacs,
+  cadairEmacsPkgs,
   config,
   lib,
   pkgs,
@@ -8,46 +10,18 @@
 in {
   options.cadair.emacs = {
     enable = lib.mkEnableOption "Cadair's emacs";
-    emacs-package = lib.mkPackageOption pkgs "emacs30-pgtk" { };
+    emacs-package = lib.mkPackageOption pkgs "emacs" { default = cadairEmacs; };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      fira-code
-      nerd-fonts.fira-code
-      fira-code-symbols
-      git
-      ripgrep
-      fd
-      emacs-all-the-icons-fonts
-      # lsp
-      unstable.python313Packages.python-lsp-server
-      unstable.python313Packages.ruff
-      unstable.python313Packages.pylsp-mypy
-      unstable.ty
-      # spelling
-      ispell
-      # nix lsp
-      nil
-      nixd
-      # dap
-      unstable.python313Packages.debugpy
-      # rust
-      unstable.rust-analyzer
-      # yaml
-      yaml-language-server
-      harper
-      # mermaid
-      mermaid-cli
-    ] ++ lib.optionals (pkgs.stdenv.isLinux) [
-      wtype
+    home.packages = cadairEmacsPkgs ++ lib.optionals (pkgs.stdenv.isLinux) [
+      pkgs.wtype
     ];
 
     # emacs
     programs.emacs = {
       enable = true;
       package = cfg.emacs-package;
-      extraPackages = epkgs: [ epkgs.tree-sitter epkgs.tree-sitter-langs epkgs.treesit-grammars.with-all-grammars epkgs.nerd-icons epkgs.nerd-icons-completion ];
     };
 
     # consider having init.el built from config.org automatically here
