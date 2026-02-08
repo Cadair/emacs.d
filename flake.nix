@@ -159,11 +159,14 @@
         );
         homeManagerModules.cadair-emacs =
           { config, lib, ... }:
+  let
+    emacsPkgs = cadairEmacsPkgs.${config.nixpkgs.system};
+  in
         {
           imports = [
             (import ./nix {
               inherit (cadairEmacs.${config.nixpkgs.system}) cadairEmacs;
-              inherit (cadairEmacsPkgs.${config.nixpkgs.system}) cadairEmacsPkgs;
+              inherit emacsPkgs;
               inherit config;
               inherit lib;
               inherit (nixpkgsFor.${config.nixpkgs.system}) pkgs;
@@ -171,5 +174,4 @@
           ];
         };
       };
-
 }
