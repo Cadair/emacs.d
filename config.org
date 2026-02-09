@@ -2343,8 +2343,8 @@ Org-Agenda
                   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                  ("h" "Habit" entry (file cadair-capture-file)
                   "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-                 ("d" "Day Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/day_block.org") :empty-lines 1)
-                 ("w" "Week Block Planning" plain (file cadair-year-plan) (file "~/Notebooks/capture_templates/week_block.org") :empty-lines 1))))
+                 ("d" "Day Block Planning" entry (file+olp+datetree cadair-year-plan) (file "~/Notebooks/capture_templates/day_block.org") :empty-lines 1 :tree-type week :time-prompt t)
+                 ("w" "Week Block Planning" entry (file+olp cadair-year-plan "2026") (file "~/Notebooks/capture_templates/week_block.org") :empty-lines 1))))
 
    #+end_src
 
@@ -2529,7 +2529,7 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
               (format "%s" (org-clock-waybar--get-tags)))))
 
 (use-package org-clock-waybar
-  :vc (:url "https://gitea.polonkai.eu/Cadair/org-clock-waybar.git" :rev "configurable-output")
+  :vc (:url "https://gitea.polonkai.eu/gergely/org-clock-waybar.git" :rev "main")
   :config
   (org-clock-waybar-setup)
   :custom
@@ -2544,16 +2544,16 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
    #+begin_src emacs-lisp
    (use-package request
      ;; Enable these to debug org-clock-float requests
-     ;; :custom
-     ;; (request-log-level 'debug)
-     ;; (request-message-level 'debug)
+     :custom
+     (request-log-level 'debug)
+     (request-message-level 'debug)
      )
 
    (use-package org-clock-float
      :requires (request)
-     :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
+     ;; :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
      ;; For local development
-     ;; :load-path "/home/stuart/Git/org-clock-float/"
+     :load-path "/home/stuart/Git/org-clock-float/"
      :config
      (org-clock-float-setup)
      :custom
