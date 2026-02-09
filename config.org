@@ -2566,6 +2566,25 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
 
 This is cribbed from [[https://mentat.za.net/blog/2026/01/27/org-mode-time-blocks/][Stefan's blog]].
 
+This requires two capture templates (see [[file:/home/stuart/Git/new.emacs.d/config.org::*Capture][Capture]]) which look like this:
+
+The day template:
+#+BEGIN_SRC org
+\* %u
+
+content
+#+END_SRC
+
+The week template:
+#+BEGIN_SRC org
+%(org-capture-put :custom-timestamp (org-read-date))
+
+\* %(format-time-string "\%Y-W\%W" (date-to-time (org-capture-get :custom-timestamp)))
+#+END_SRC
+
+
+The week template:
+
 #+begin_src emacs-lisp
 (defun cadair/org-open-year-and-jump-to-today-plan ()
   (interactive)
