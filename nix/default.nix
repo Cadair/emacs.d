@@ -1,11 +1,11 @@
 {
-  cadairEmacs,
-  cadairEmacsPkgs,
   config,
   lib,
   pkgs,
   ...
 }: let
+  cadairEmacs = config.perSystem.${config.nixpkgs.system}.cadairEmacs;
+  # cadairEmacsPkgs = config.perSystem.${config.nixpkgs.system}.cadairEmacsPkgs;
   cfg = config.cadair.emacs;
 in {
   options.cadair.emacs = {
@@ -14,7 +14,35 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = cadairEmacsPkgs ++ lib.optionals (pkgs.stdenv.isLinux) [
+    home.packages = with pkgs; [
+      fira-code
+      nerd-fonts.fira-code
+      fira-code-symbols
+      git
+      ripgrep
+      fd
+      emacs-all-the-icons-fonts
+      # spelling
+      ispell
+      # nix lsp
+      nil
+      nixd
+      # yaml
+      yaml-language-server
+      harper
+      # mermaid
+      mermaid-cli
+    ]  ++ [
+      # lsp
+      pkgs.unstable.python313Packages.python-lsp-server
+      pkgs.unstable.python313Packages.ruff
+      pkgs.unstable.python313Packages.pylsp-mypy
+      pkgs.unstable.ty
+      # dap
+      pkgs.unstable.python313Packages.debugpy
+      # rust
+      pkgs.unstable.rust-analyzer
+    ] ++ lib.optionals (pkgs.stdenv.isLinux) [
       pkgs.wtype
     ];
 

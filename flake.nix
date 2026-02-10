@@ -2,6 +2,8 @@
   description = "Cadair's Emacs Config";
 
   inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -10,28 +12,24 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs =
-    inputs@{ self, ... }:
-    let
-      supportedSystems = [
-        "aarch64-linux"
-        "x86_64-linux"
+  outputs = inputs@{ flake-parts, ... }:
+    # https://flake.parts/module-arguments.html
+    flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, withSystem, moduleWithSystem, ... }: {
+      imports = [
+        # Optional: use external flake logic, e.g.
+        # inputs.foo.flakeModules.default
       ];
-
-      # Function to generate a set based on supported systems:
-      forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
-
-      # Attribute set of nixpkgs for each system:
-      nixpkgsFor = forAllSystems (system: import inputs.nixpkgs { inherit system; });
-      nixpkgsUnstableFor = forAllSystems (system: import inputs.nixpkgs-unstable { inherit system; });
-
-      cadairEmacs = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-          emacs = pkgs.emacsPackagesFor pkgs.emacs-pgtk;
-        in
-          emacs.emacsWithPackages (epkgs: with epkgs; [
+      flake = {
+        # Put your original flake attributes here.
+        homeModules = import ./nix;
+      };
+      systems = [
+        # systems for which you want to build the `perSystem` attributes
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      perSystem = { pkgs, ... }: {
+        config.packages.cadairEmacs = pkgs.emacs-pgtk.pkgs.withPackages (epkgs: with epkgs; [
             tree-sitter
             tree-sitter-langs
             treesit-grammars.with-all-grammars
@@ -104,74 +102,77 @@
             secretaria
             request
             ement
-          ])
-      );
-
-      cadairEmacsPkgs = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-          unstablePkgs = nixpkgsUnstableFor.${system};
-        in
-          with pkgs; [
-            fira-code
-            nerd-fonts.fira-code
-            fira-code-symbols
-            git
-            ripgrep
-            fd
-            emacs-all-the-icons-fonts
-            # spelling
-            ispell
-            # nix lsp
-            nil
-            nixd
-            # yaml
-            yaml-language-server
-            harper
-            # mermaid
-            mermaid-cli
-            ] ++ [
-            # lsp
-            unstablePkgs.python313Packages.python-lsp-server
-            unstablePkgs.python313Packages.ruff
-            unstablePkgs.python313Packages.pylsp-mypy
-            unstablePkgs.ty
-            # dap
-            unstablePkgs.python313Packages.debugpy
-            # rust
-            unstablePkgs.rust-analyzer
-          ]
-      );
-    in
-      {
-        devShells = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
-          {
-            default = pkgs.mkShell {
-              buildInputs = [
-                (cadairEmacsPkgs.${system})
-                (cadairEmacs.${system})
-              ];
-            };
-          }
-        );
-        homeManagerModules.cadair-emacs =
-          { config, lib, ... }:
-  let
-    emacsPkgs = cadairEmacsPkgs.${config.nixpkgs.system};
-  in
-        {
-          imports = [
-            (import ./nix {
-              inherit (cadairEmacs.${config.nixpkgs.system}) cadairEmacs;
-              inherit emacsPkgs;
-              inherit config;
-              inherit lib;
-              inherit (nixpkgsFor.${config.nixpkgs.system}) pkgs;
-            })
-          ];
-        };
+        ]);
+        # config.packages.cadairEmacsPkgs = with pkgs; [ ty ];
       };
+    });
 }
+  # outputs =
+  #   inputs@{ self, ... }:
+  #   let
+  #     supportedSystems = [
+  #       "aarch64-linux"
+  #       "x86_64-linux"
+  #     ];
+
+  #     # Function to generate a set based on supported systems:
+  #     forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
+
+  #     # Attribute set of nixpkgs for each system:
+  #     nixpkgsFor = forAllSystems (system: import inputs.nixpkgs { inherit system; });
+  #     nixpkgsUnstableFor = forAllSystems (system: import inputs.nixpkgs-unstable { inherit system; });
+
+  #     cadairEmacs = forAllSystems (system:
+  #       let
+  #         pkgs = nixpkgsFor.${system};
+  #         emacs = pkgs.emacsPackagesFor pkgs.emacs-pgtk;
+  #       in
+  #         emacs.emacsWithPackages (epkgs: with epkgs; [
+            # tree-sitter
+            # ement
+          #] )
+  #     );
+
+  #     cadairEmacsPkgs = forAllSystems (system:
+  #       let
+  #         pkgs = nixpkgsFor.${system};
+  #         unstablePkgs = nixpkgsUnstableFor.${system};
+  #       in
+  #         with pkgs; [
+            # # rust
+            # unstablePkgs.rust-analyzer
+          #]# 
+  #     );
+  #   in
+  #     {
+  #       devShells = forAllSystems (system:
+  #       let
+  #         pkgs = nixpkgsFor.${system};
+  #       in
+  #         {
+  #           default = pkgs.mkShell {
+  #             buildInputs = [
+  #               (cadairEmacsPkgs.${system})
+  #               (cadairEmacs.${system})
+  #             ];
+  #           };
+  #         }
+  #       );
+  #       homeManagerModules.cadair-emacs =
+  #         { config, lib, ... }:
+  # let
+  #   cadairEmacsPkgs = cadairEmacsPkgs.${config.nixpkgs.system};
+  # in
+  #       {
+  #         imports = [
+  #           (import ./nix {
+  #             inherit (cadairEmacs.${config.nixpkgs.system}) cadairEmacs;
+  #             inherit cadairEmacsPkgs;
+  #             inherit config;
+  #             inherit lib;
+  #             inherit (nixpkgsFor.${config.nixpkgs.system}) pkgs;
+  #           })
+  #         ];
+  #       };
+  #     };
+# }
