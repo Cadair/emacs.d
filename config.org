@@ -2555,7 +2555,7 @@ This requires two capture templates (see [[file:/home/stuart/Git/new.emacs.d/con
 
 The day template:
 #+BEGIN_SRC org
-\* %u
+\* Plan
 
 content
 #+END_SRC
