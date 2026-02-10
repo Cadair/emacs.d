@@ -173,6 +173,7 @@
     "c L"   '(evilnc-toggle-comment-empty-lines :wk "Toggle commenting empty lines")
     "c o"   '(symbols-outline-show :wk "Show symbols outline")
     "c r"   '(eglot-rename :wk "Rename symbol at point")
+    "c R"   '(restart-eglot :wk "Restart Language server")
     "c s"   '(consult-eglot-symbols :wk "Find Symbols in Workspace")
     )
 
@@ -693,6 +694,14 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
       python-shell-virtualenv-root
     nil))
 
+(setq cadair/ty-diagnostic-mode "off")
+(defun cadair/toggle-ty-diagnostic-mode ()
+  (interactive)
+  (setq cadair/ty-diagnostic-mode
+        (if (string-equal cadair/ty-diagnostic-mode "on") "off" "on"))
+  (restart-eglot))
+
+
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
   :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode yaml-ts-mode) . eglot-ensure)
@@ -712,22 +721,11 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
 
   ;; (eglot-workspace-configuration '(:ty (:diagnosticMode "off")))
-  ;; Dynamically load the workspace configuration so that we set jedi to use the active workspace
+  ;; Here we dynamically compose the workspace configuration so I can
+  ;; turn things on and off as I want
   (eglot-workspace-configuration
-   (lambda (&rest args)
-     (let ((venv-directory (get-python-env-root)))
-       (message "Located venv: %s" venv-directory)
-       `((:ty (:diagnosticMode "off"))
-         (:pylsp .
-                 (:plugins
-                  (:jedi_completion (:fuzzy t)
-                                    :jedi (:environment ,venv-directory)
-                                    :pydocstyle (:enabled nil)
-                                    :pycodestyle (:enabled nil)
-                                    :mccabe (:enabled nil)
-                                    :pyflakes (:enabled nil)
-                                    :flake8 (:enabled nil)
-                                    :black (:enabled nil))))))))
+   (defun local-eglot-workspace-configuration-function (server)
+     `(:ty (:diagnosticMode ,cadair/ty-diagnostic-mode))))
   )
 
 (defun restart-eglot ()
@@ -1048,6 +1046,8 @@ falling back on searching your PATH."
   "m d" 'micromamba-deactivate
   "v a" 'pyvenv-workon
   "v d" 'pyvenv-deactivate
+
+  "y d" 'cadair/toggle-ty-diagnostic-mode
   )
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
