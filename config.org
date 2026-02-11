@@ -1169,7 +1169,7 @@ Finally, setup the flymake-ruff package, to have ruff checks outside of eglot.
      ("SyntaxError"    . :error)      ; Syntax Errors
      ("E1"             . :error)      ; Critical style errors
      ("E"              . :warning)    ; Not-critical style errors
-     ("W"              . :note)       ; Style warnings
+     ("W"              . :note)    ; Style warnings
      ("F"              . :error)      ; Logical errors (pyflakes)
      ("B"              . :warning)    ; Bugbears (best practices)
      ("C90"            . :warning)    ; Complexity (mccabe)
@@ -2543,9 +2543,9 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
    #+begin_src emacs-lisp
    (use-package request
      ;; Enable these to debug org-clock-float requests
-     :custom
-     (request-log-level 'debug)
-     (request-message-level 'debug)
+     ;; :custom
+     ;; (request-log-level 'debug)
+     ;; (request-message-level 'debug)
      )
 
    (use-package org-clock-float

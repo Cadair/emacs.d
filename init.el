@@ -866,7 +866,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
      ("SyntaxError"    . :error)      ; Syntax Errors
      ("E1"             . :error)      ; Critical style errors
      ("E"              . :warning)    ; Not-critical style errors
-     ("W"              . :note)       ; Style warnings
+     ("W"              . :note)    ; Style warnings
      ("F"              . :error)      ; Logical errors (pyflakes)
      ("B"              . :warning)    ; Bugbears (best practices)
      ("C90"            . :warning)    ; Complexity (mccabe)
@@ -1909,9 +1909,9 @@ falling back on searching your PATH."
 
 (use-package request
   ;; Enable these to debug org-clock-float requests
-  :custom
-  (request-log-level 'debug)
-  (request-message-level 'debug)
+  ;; :custom
+  ;; (request-log-level 'debug)
+  ;; (request-message-level 'debug)
   )
 
 (use-package org-clock-float
