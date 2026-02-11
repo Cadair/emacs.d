@@ -713,7 +713,6 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (add-to-list 'eglot-server-programs '(rst-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
-  (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("ty" "server")))
   :custom
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
