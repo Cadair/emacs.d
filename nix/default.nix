@@ -5,6 +5,79 @@
   ...
 }: let
   cfg = config.cadair.emacs;
+  emacsPackages = (epkgs: with epkgs; [
+    alert
+    auctex
+    blamer
+    breadcrumb
+    browse-kill-ring
+    cape
+    consult
+    corfu
+    dape
+    dashboard
+    diff-hl
+    diminish
+    doom-modeline
+    eat
+    eglot
+    ement
+    evil
+    evil-collection
+    evil-nerd-commenter
+    flymake
+    flymake-ruff
+    forge
+    general
+    git-link
+    git-timemachine
+    hl-todo
+    htmlize
+    indent-bars
+    jinja2-mode
+    magit
+    marginalia
+    mermaid-mode
+    micromamba
+    mixed-pitch
+    nerd-icons
+    nerd-icons-completion
+    nerd-icons-completion
+    nerd-icons-corfu
+    nerd-icons-dired
+    nerd-icons-ibuffer
+    nix-ts-mode
+    orderless
+    org-modern
+    ox-reveal
+    project
+    python-black
+    python-isort
+    python-pytest
+    pyvenv
+    quarto-mode
+    rainbow-delimiters
+    ranger
+    reformatter
+    request
+    ruff-format
+    rustic
+    secretaria
+    tabspaces
+    terraform-mode
+    toc-org
+    tree-sitter
+    tree-sitter-langs
+    treemacs
+    treemacs-evil
+    treemacs-magit
+    treesit-fold
+    treesit-grammars.with-all-grammars
+    vertico
+    which-key
+    yasnippet-snippets
+    zeal-at-point
+      ]);
 in {
   options.cadair.emacs = {
     enable = lib.mkEnableOption "Cadair's emacs";
@@ -47,7 +120,7 @@ in {
     programs.emacs = {
       enable = true;
       package = cfg.emacs-package;
-      extraPackages = epkgs: [ epkgs.tree-sitter epkgs.tree-sitter-langs epkgs.treesit-grammars.with-all-grammars epkgs.nerd-icons epkgs.nerd-icons-completion ];
+      extraPackages = emacsPackages;
     };
 
     # consider having init.el built from config.org automatically here
