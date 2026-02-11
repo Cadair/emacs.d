@@ -860,6 +860,21 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (use-package flymake-ruff
   :ensure t
   :hook (eglot-managed-mode . flymake-ruff-load)
+  :custom
+  (flymake-ruff--severity-map
+   '(("invalid-syntax" . :error)      ; Handle ruff's specific syntax error code
+     ("SyntaxError"    . :error)      ; Syntax Errors
+     ("E1"             . :error)      ; Critical style errors
+     ("E"              . :warning)    ; Not-critical style errors
+     ("W"              . :note)       ; Style warnings
+     ("F"              . :error)      ; Logical errors (pyflakes)
+     ("B"              . :warning)    ; Bugbears (best practices)
+     ("C90"            . :warning)    ; Complexity (mccabe)
+     ("N"              . :note)       ; Naming conventions
+     ("I"              . :note)       ; Import sorting
+     ("UP"             . :note)       ; Python upgrades (pyupgrade)
+     ("SIM"            . :note)       ; Simplification
+     ("PERF"           . :warning)))  ; Performance issues
   )
 
 (use-package python-isort)
