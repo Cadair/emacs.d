@@ -683,6 +683,12 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (setq cadair/ty-diagnostic-mode
         (if (string-equal cadair/ty-diagnostic-mode "on") "off" "on"))
   (restart-eglot))
+(setq cadair/ty-inlay-hints t)
+(defun cadair/toggle-ty-inlay-hints ()
+  (interactive)
+  (setq cadair/ty-inlay-hints
+        (if (string-equal cadair/ty-inlay-hints t) :json-false t))
+  (restart-eglot))
 
 
 (use-package eglot
@@ -707,7 +713,11 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   ;; turn things on and off as I want
   (eglot-workspace-configuration
    (defun local-eglot-workspace-configuration-function (server)
-     `(:ty (:diagnosticMode ,cadair/ty-diagnostic-mode))))
+     `(:ty
+       (:diagnosticMode ,cadair/ty-diagnostic-mode)
+       (:inlayHints (:variableTypes ,cadair/ty-inlay-hints)
+                    (:callArgumentNames ,cadair/ty-inlay-hints))
+       )))
   )
 
 (defun restart-eglot ()
