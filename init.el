@@ -714,10 +714,11 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (eglot-workspace-configuration
    (defun local-eglot-workspace-configuration-function (server)
      `(:ty
-       (:diagnosticMode ,cadair/ty-diagnostic-mode)
-       (:inlayHints (:variableTypes ,cadair/ty-inlay-hints)
-                    (:callArgumentNames ,cadair/ty-inlay-hints))
-       )))
+       (:diagnosticMode ,cadair/ty-diagnostic-mode
+        :inlayHints (:variableTypes ,cadair/ty-inlay-hints
+                     :callArgumentNames ,cadair/ty-inlay-hints))
+       )
+     ))
   )
 
 (defun restart-eglot ()
@@ -1018,6 +1019,7 @@ falling back on searching your PATH."
   "t a" 'python-pytest
   "t f" 'python-pytest-file-dwim
   "t F" 'python-pytest-file
+  "t l" 'python-pytest-last-failed
   "t t" 'python-pytest-run-def-or-class-at-point-dwim
   "t T" 'python-pytest-run-def-or-class-at-point
   "t r" 'python-pytest-repeat
@@ -1039,7 +1041,8 @@ falling back on searching your PATH."
   "v a" 'pyvenv-workon
   "v d" 'pyvenv-deactivate
 
-  "y d" 'cadair/toggle-ty-diagnostic-mode
+  "y d" '(cadair/toggle-ty-diagnostic-mode :wk "Toggle ty Diagnostics")
+  "y h" '(cadair/toggle-ty-inlay-hints :wk "Toggle ty Inlay Hints")
   )
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
