@@ -842,7 +842,9 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (setenv "MAMBA_ROOT_PREFIX" (expand-file-name "~/.local/share/mamba"))
 (use-package micromamba
   :ensure t
-  :hook (micromamba-postactivate-hook . restart-eglot)
+  ;; I have no idea why the :hook line isn't working
+  :init (add-hook 'micromamba-postactivate-hook #'restart-eglot)
+  ;; :hook (micromamba-postactivate-hook . restart-eglot)
   )
 
 (use-package python-pytest
@@ -852,7 +854,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
     ["Extra Options"
      ("-r" "Remote data (any)" "--remote-data=any")
      ("-c" "Coverage" "--cov --cov-report=term-missing")
-         ]
+     ]
     )
   )
 

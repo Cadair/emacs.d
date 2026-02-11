@@ -1137,7 +1137,9 @@ I am using both micromamba and virtualenvwrapper-style virtual envs, so we enabl
 (setenv "MAMBA_ROOT_PREFIX" (expand-file-name "~/.local/share/mamba"))
 (use-package micromamba
   :ensure t
-  :hook (micromamba-postactivate-hook . restart-eglot)
+  ;; I have no idea why the :hook line isn't working
+  :init (add-hook 'micromamba-postactivate-hook #'restart-eglot)
+  ;; :hook (micromamba-postactivate-hook . restart-eglot)
   )
 #+end_src
 
@@ -1151,7 +1153,7 @@ Enable the excellent pytest package, and setup an extra hook for [[https://githu
     ["Extra Options"
      ("-r" "Remote data (any)" "--remote-data=any")
      ("-c" "Coverage" "--cov --cov-report=term-missing")
-         ]
+     ]
     )
   )
 #+end_src
