@@ -650,25 +650,49 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (tab-bar-new-tab-choice "*scratch*")
   )
 
-(with-eval-after-load 'consult
-  ;; Hide full buffer list (still available with "b" prefix)
-  (plist-put consult-source-buffer :hidden t)
-  (plist-put consult-source-buffer :default nil)
+;; This block is needed for newer (2026) consult, which isn't in nixpkgs stable yet
+;; Filter Buffers for Consult-Buffer (new consult)
+;; (with-eval-after-load 'consult
+;;   ;; Hide full buffer list (still available with "b" prefix)
+;;   (plist-put consult-source-buffer :hidden t)
+;;   (plist-put consult-source-buffer :default nil)
 
-  ;; set consult-workspace buffer list
-  (defvar consult--source-workspace
-    (list :name     "Workspace Buffers"
-          :narrow   ?w
-          :history  'buffer-name-history
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :default  t
-          :items    (lambda () (consult--buffer-query
-                           :predicate #'tabspaces--local-buffer-p
-                           :sort 'visibility
-                           :as #'buffer-name)))
-    "Set workspace buffer list for consult-buffer.")
-  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+;;   ;; set consult-workspace buffer list
+;;   (defvar consult--source-workspace
+;;     (list :name     "Workspace Buffers"
+;;           :narrow   ?w
+;;           :history  'buffer-name-history
+;;           :category 'buffer
+;;           :state    #'consult--buffer-state
+;;           :default  t
+;;           :items    (lambda () (consult--buffer-query
+;;                            :predicate #'tabspaces--local-buffer-p
+;;                            :sort 'visibility
+;;                            :as #'buffer-name)))
+;;     "Set workspace buffer list for consult-buffer.")
+;;   (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+
+
+;; Filter Buffers for Consult-Buffer (old consult)
+
+(with-eval-after-load 'consult
+;; hide full buffer list (still available with "b" prefix)
+(consult-customize consult--source-buffer :hidden t :default nil)
+;; set consult-workspace buffer list
+(defvar consult--source-workspace
+  (list :name     "Workspace Buffers"
+        :narrow   ?w
+        :history  'buffer-name-history
+        :category 'buffer
+        :state    #'consult--buffer-state
+        :default  t
+        :items    (lambda () (consult--buffer-query
+                         :predicate #'tabspaces--local-buffer-p
+                         :sort 'visibility
+                         :as #'buffer-name)))
+
+  "Set workspace buffer list for consult-buffer.")
+(add-to-list 'consult-buffer-sources 'consult--source-workspace))
 
 (defun get-python-env-root ()
   "Return the value of `python-shell-virtualenv-root` if defined, otherwise nil."

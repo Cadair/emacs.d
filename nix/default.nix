@@ -78,7 +78,7 @@
     which-key
     yasnippet-snippets
     zeal-at-point
-      ]);
+  ]);
 in {
   options.cadair.emacs = {
     enable = lib.mkEnableOption "Cadair's emacs";
