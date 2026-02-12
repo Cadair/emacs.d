@@ -1935,9 +1935,9 @@ falling back on searching your PATH."
 
 (use-package org-clock-float
   :requires (request)
-  ;; :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
+  :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
   ;; For local development
-  :load-path "/home/stuart/Git/org-clock-float/"
+  ;; :load-path "/home/stuart/Git/org-clock-float/"
   :config
   (org-clock-float-setup)
   :custom
