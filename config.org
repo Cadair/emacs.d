@@ -1046,14 +1046,13 @@ To use it write out the full keyword (or use autocompletion) and press Tab.
 
    We want to use tree-sitter for folding where possible.
    #+begin_src emacs-lisp
-    (use-package treesit-fold
-      :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
-      :custom
-      (global-treesit-fold-mode t)
-      (global-treesit-fold-indicators-mode nil)
-      (treesit-fold-summary-show t)
-      (treesit-fold-summary-max-length 100)
-   )
+   (use-package treesit-fold
+     :custom
+     (global-treesit-fold-mode t)
+     (global-treesit-fold-indicators-mode nil)
+     (treesit-fold-summary-show t)
+     (treesit-fold-summary-max-length 100)
+    )
    #+end_src
 
 treesit-fold adds itself to the [[help:evil-fold-list][evil-fold-list]] which lets us use the existing evil ~z~ shortcuts for the folding.

@@ -780,13 +780,12 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   )
 
 (use-package treesit-fold
-   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
-   :custom
-   (global-treesit-fold-mode t)
-   (global-treesit-fold-indicators-mode nil)
-   (treesit-fold-summary-show t)
-   (treesit-fold-summary-max-length 100)
-)
+  :custom
+  (global-treesit-fold-mode t)
+  (global-treesit-fold-indicators-mode nil)
+  (treesit-fold-summary-show t)
+  (treesit-fold-summary-max-length 100)
+ )
 
 (use-package combobulate
   :vc (:url "https://github.com/mickeynp/combobulate.git"

@@ -68,6 +68,7 @@
     toc-org
     tree-sitter
     tree-sitter-langs
+    treesit-fold
     treemacs
     treemacs-evil
     treemacs-magit
