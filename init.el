@@ -756,6 +756,8 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   ;; Restart Eglot for the current buffer
   (eglot-ensure))
 
+(use-package consult-eglot)
+
 (use-package dape
   :preface
   ;; By default dape shares the same keybinding prefix as `gud'

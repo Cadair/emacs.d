@@ -13,6 +13,7 @@
     browse-kill-ring
     cape
     consult
+    consult-eglot
     corfu
     dape
     dashboard

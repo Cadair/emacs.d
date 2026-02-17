@@ -1009,6 +1009,13 @@ Use visual block to uncomment easily in Org documents (C-v).
   (eglot-ensure))
 #+END_SRC
 
+*** Eglot symbols
+https://github.com/mohkale/consult-eglot
+
+#+begin_src emacs-lisp
+(use-package consult-eglot)
+#+end_src
+
 ** TODO dape
 https://github.com/svaante/dape
 
