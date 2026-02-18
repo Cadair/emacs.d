@@ -370,10 +370,9 @@
 
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
+  (confirm-kill-emacs #'y-or-n-p)
   :hook
   (prog-mode . editorconfig-mode)
-  ;; replaced by treesit-fold for now
-  ;; (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
