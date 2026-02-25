@@ -1411,6 +1411,7 @@ A bunch of language specific key binds, using ~,~ as the leader key.
 
 **** ASDF
 
+Define a major-mode specific to asdf files which hides narrows the buffer to just the yaml document.
 #+begin_src emacs-lisp
 (defun cadair/narrow-to-yaml ()
   (interactive)
@@ -1426,6 +1427,7 @@ Automatically narrows to the YAML section on activation."
 
 
 (add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
+;; Tell treesit-fold our new mode is just ymal-mode
 (push `(asdf-mode . ,(treesit-fold-parsers-yaml)) treesit-fold-range-alist)
 #+end_src
 

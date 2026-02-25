@@ -1086,6 +1086,7 @@ Automatically narrows to the YAML section on activation."
 
 
 (add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
+;; Tell treesit-fold our new mode is just ymal-mode
 (push `(asdf-mode . ,(treesit-fold-parsers-yaml)) treesit-fold-range-alist)
 
 (use-package nix-ts-mode
