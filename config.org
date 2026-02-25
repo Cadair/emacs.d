@@ -1407,7 +1407,20 @@ A bunch of language specific key binds, using ~,~ as the leader key.
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.asdf\\'" . yaml-ts-mode))
+#+end_src
+
+**** ASDF
+
+#+begin_src emacs-lisp
+(define-derived-mode asdf-mode yaml-ts-mode "ASDF Mode"
+  "Major mode for YAML files with trailing binary data.
+Automatically narrows to the YAML section on activation."
+  (save-excursion
+    (goto-char (point-min))
+    (when (search-forward "..." nil t)
+      (narrow-to-region (point-min) (point)))))
+
+(add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
 #+end_src
 
 *** nix
