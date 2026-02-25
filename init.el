@@ -1072,23 +1072,21 @@ falling back on searching your PATH."
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
 
-;;(define-derived-mode asdf-mode yaml-ts-mode "ASDF Mode"
-;;  "Major mode for YAML files with trailing binary data.
-;;Automatically narrows to the YAML section on activation."
-;;  (save-excursion
-;;    (goto-char (point-min))
-;;    (when (search-forward "..." nil t)
-;;      (narrow-to-region (point-min) (point)))))
-;;
-;;
-;;(add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
-;;(add-to-list 'treesit-fold-range-alist `((asdf-mode . ,(treesit-fold-parsers-yaml))))
 (defun cadair/narrow-to-yaml ()
   (interactive)
   (save-excursion
     (goto-char (point-min))
     (when (search-forward "..." nil t)
       (narrow-to-region (point-min) (point)))))
+
+(define-derived-mode asdf-mode yaml-ts-mode "ASDF Mode"
+ "Major mode for YAML files with trailing binary data.
+Automatically narrows to the YAML section on activation."
+ (cadair/narrow-to-yaml))
+
+
+(add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
+(push `(asdf-mode . ,(treesit-fold-parsers-yaml)) treesit-fold-range-alist)
 
 (use-package nix-ts-mode
  :mode "\\.nix\\'")
