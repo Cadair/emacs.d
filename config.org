@@ -75,6 +75,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#evil-nerd-commenter][Evil-nerd-commenter]]
   - [[#indent-guides][Indent guides]]
   - [[#eat---terminal][EAT - Terminal]]
+  - [[#vlf][VLF]]
   - [[#zeal][Zeal]]
 - [[#org-mode][Org Mode]]
   - [[#visuals][Visuals]]
@@ -1853,6 +1854,14 @@ This auto-detect is taken from here: https://www.emacswiki.org/emacs/FlySpell#h5
   :custom
   (shell-file-name "xonsh")
   )
+#+end_src
+
+** VLF
+
+Add support for loading very large files
+
+#+begin_src emacs-lisp
+(use-package vlf)
 #+end_src
 
 ** Zeal

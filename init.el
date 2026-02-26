@@ -1377,6 +1377,8 @@ Automatically narrows to the YAML section on activation."
   (shell-file-name "xonsh")
   )
 
+(use-package vlf)
+
 (use-package zeal-at-point)
 
 (setq cadair-year-plan

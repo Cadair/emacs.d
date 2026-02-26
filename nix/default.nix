@@ -76,6 +76,7 @@
     treesit-fold
     treesit-grammars.with-all-grammars
     vertico
+    vlf
     which-key
     yasnippet-snippets
     zeal-at-point
