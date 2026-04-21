@@ -1084,7 +1084,6 @@ falling back on searching your PATH."
 Automatically narrows to the YAML section on activation."
  (cadair/narrow-to-yaml))
 
-
 (add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
 ;; Tell treesit-fold our new mode is just ymal-mode
 (push `(asdf-mode . ,(treesit-fold-parsers-yaml)) treesit-fold-range-alist)
@@ -1378,6 +1377,7 @@ Automatically narrows to the YAML section on activation."
   )
 
 (use-package vlf)
+(require 'vlf-setup)
 
 (use-package zeal-at-point)
 

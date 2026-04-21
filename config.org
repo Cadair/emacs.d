@@ -1426,7 +1426,6 @@ Define a major-mode specific to asdf files which hides narrows the buffer to jus
 Automatically narrows to the YAML section on activation."
  (cadair/narrow-to-yaml))
 
-
 (add-to-list 'auto-mode-alist '("\\.asdf\\'" . asdf-mode))
 ;; Tell treesit-fold our new mode is just ymal-mode
 (push `(asdf-mode . ,(treesit-fold-parsers-yaml)) treesit-fold-range-alist)
@@ -1862,6 +1861,7 @@ Add support for loading very large files
 
 #+begin_src emacs-lisp
 (use-package vlf)
+(require 'vlf-setup)
 #+end_src
 
 ** Zeal
