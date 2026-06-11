@@ -1069,6 +1069,10 @@ falling back on searching your PATH."
   "y h" '(cadair/toggle-ty-inlay-hints :wk "Toggle ty Inlay Hints")
   )
 
+(use-package cython-mode
+  :vc (:url "https://github.com/cython/emacs-cython-mode"
+       :rev "master"))
+
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
 

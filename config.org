@@ -1403,6 +1403,14 @@ A bunch of language specific key binds, using ~,~ as the leader key.
   )
 #+end_src
 
+*** Cython
+
+#+begin_src emacs-lisp
+
+(use-package cython-mode
+  :vc (:url "https://github.com/cython/emacs-cython-mode"
+       :rev "master"))
+#+end_src
 *** Yaml
 
 #+begin_src emacs-lisp
