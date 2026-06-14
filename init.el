@@ -1181,6 +1181,8 @@ Automatically narrows to the YAML section on activation."
 
 (use-package blamer)
 
+(use-package devcontaner)
+
 (use-package corfu
   ;; Optional customizations
   :custom

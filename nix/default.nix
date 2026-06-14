@@ -17,6 +17,7 @@
     corfu
     dape
     dashboard
+    devcontainer
     diff-hl
     diminish
     doom-modeline

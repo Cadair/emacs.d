@@ -9,7 +9,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  
+
   outputs =
     inputs@{ self, ... }:
     let
@@ -24,6 +24,7 @@
       # Attribute set of nixpkgs for each system:
       nixpkgsFor = forAllSystems (system: import inputs.nixpkgs { inherit system; });
     in
+
     {
       homeManagerModules.cadair-emacs =
         { ... }:
