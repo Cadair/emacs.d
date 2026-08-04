@@ -98,9 +98,9 @@ in {
       fd
       emacs-all-the-icons-fonts
       # lsp
-      unstable.python313Packages.python-lsp-server
-      unstable.python313Packages.ruff
-      unstable.python313Packages.pylsp-mypy
+      python313Packages.python-lsp-server
+      python313Packages.ruff
+      python313Packages.pylsp-mypy
       unstable.ty
       # spelling
       ispell
@@ -108,7 +108,7 @@ in {
       nil
       nixd
       # dap
-      unstable.python313Packages.debugpy
+      python313Packages.debugpy
       # rust
       unstable.rust-analyzer
       # yaml
