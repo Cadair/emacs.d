@@ -520,6 +520,22 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
   (confirm-kill-emacs #'y-or-n-p)
+
+  ;; Performance
+  ;;
+  ;; Much of this taken from https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/
+
+  ;; Disable Bidirectional Text Scanning
+  (setq-default bidi-display-reordering 'left-to-right
+                bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t)
+ 
+  ;; Skip Fontification During Input (Doom Emacs)
+  (setq redisplay-skip-fontification-on-input t)
+
+  ;; Prevent find-file-at-point from Pinging Hostnames
+  (setq ffap-machine-p-known 'reject)
+
   :hook
   (prog-mode . editorconfig-mode)
   :config
@@ -538,6 +554,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
           nil nil t)
   )
 #+end_src
+
 
 ** Tabs are Evil
 #+BEGIN_SRC emacs-lisp
@@ -567,6 +584,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (add-hook 'text-mode-hook #'whitespace-mode)
 #+end_src
+
 ** EDiff
 
 #+begin_src emacs-lisp
@@ -584,6 +602,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
 ;;(setq exec-path (append exec-path '("/run/current-system/sw/bin/")))
 ;;(setq exec-path (append exec-path '("/home/stuart/.nix-profile/bin/")))
    #+end_src
+
 ** Window management
 
 Tweaks and customisations to emacs' window management.
@@ -617,6 +636,8 @@ This is based off reading this tutorial: https://www.masteringemacs.org/article/
    (setq compilation-scroll-output t)
    (setq compile-command "tox -e py313")
    #+end_src
+
+
 * Appearance
 ** Set Theme
 My themes and fonts are set in my home-manager config so that they match the whole system.
@@ -2877,5 +2898,5 @@ We also increase Read Process Output Max so emacs can read more data.
     ;; Make gc pauses faster by decreasing the threshold.
     (setq gc-cons-threshold (* 2 1000 1000))
     ;; Increase the amount of data which Emacs reads from the process
-    (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    (setq read-process-output-max (* 4 1024 1024)) ;; 1mb
 #+end_src

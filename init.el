@@ -371,6 +371,22 @@
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
   (confirm-kill-emacs #'y-or-n-p)
+
+  ;; Performance
+  ;;
+  ;; Much of this taken from https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/
+
+  ;; Disable Bidirectional Text Scanning
+  (setq-default bidi-display-reordering 'left-to-right
+                bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t)
+ 
+  ;; Skip Fontification During Input (Doom Emacs)
+  (setq redisplay-skip-fontification-on-input t)
+
+  ;; Prevent find-file-at-point from Pinging Hostnames
+  (setq ffap-machine-p-known 'reject)
+
   :hook
   (prog-mode . editorconfig-mode)
   :config
@@ -2162,4 +2178,4 @@ Automatically narrows to the YAML section on activation."
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 ;; Increase the amount of data which Emacs reads from the process
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max (* 4 1024 1024)) ;; 1mb
