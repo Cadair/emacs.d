@@ -105,8 +105,8 @@ in {
       # spelling
       ispell
       # nix lsp
-      nil
       nixd
+      nixfmt
       # dap
       python313Packages.debugpy
       # rust
@@ -116,6 +116,8 @@ in {
       harper
       # mermaid
       mermaid-cli
+      # devcontainer
+      devcontainer
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [
       wtype
     ];

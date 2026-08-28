@@ -380,7 +380,7 @@
   (setq-default bidi-display-reordering 'left-to-right
                 bidi-paragraph-direction 'left-to-right)
   (setq bidi-inhibit-bpa t)
- 
+
   ;; Skip Fontification During Input (Doom Emacs)
   (setq redisplay-skip-fontification-on-input t)
 
@@ -734,7 +734,6 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   :ensure nil ;; Don't install eglot because it's now built-in
   :hook ((python-mode python-ts-mode nix-mode nix-ts-mode scad-mode markdown-mode rst-mode yaml-ts-mode) . eglot-ensure)
   :config
-  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
   (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
   (add-to-list 'eglot-server-programs '(scad-mode . ("openscad-lsp")))
   (add-to-list 'eglot-server-programs '(text-mode . ("harper-ls" "--stdio")))
@@ -742,22 +741,32 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs '(yaml-ts-mode . ("yaml-language-server" "--stdio")))
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("ty" "server")))
+  ;; Dynamically compose the workspace configuration so I can turn
+  ;; things on and off as I want.  `eglot-workspace-configuration' is a
+  ;; `defvar-local', so set the default value with `setq-default' (a
+  ;; plain `setq' would only bind it in the current buffer).
+(defun local-eglot-workspace-configuration-function (server)
+  (let* ((nixosPath "/etc/nixos/nixos/")
+         (hostname (car (split-string (system-name) "\\.")))
+         (flakestr (format "(builtins.getFlake (builtins.toString %s.))" nixosPath))
+         (optionsstr (concat flakestr (format ".nixosConfigurations.%s.options" hostname))))
+    `(:ty
+      (:diagnosticMode ,cadair/ty-diagnostic-mode
+                       :inlayHints (:variableTypes ,cadair/ty-inlay-hints
+                                                   :callArgumentNames ,cadair/ty-inlay-hints))
+      :nixd
+      (:nixpkgs (:expr ,(concat "import " flakestr ".inputs.nixpkgs { }"))
+       :formatter (:command ["nixfmt"])
+       :options
+       (:nixos (:expr ,optionsstr)
+               :home-manager (:expr ,(concat optionsstr ".home-manager.users.type.getSubOptions []")))))))
+
+  (setq-default eglot-workspace-configuration
+                #'local-eglot-workspace-configuration-function)
   :custom
   ;; (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
-  (eglot-autoshutdown t);; Shutdown unused servers.
+  (eglot-autoshutdown t) ;; Shutdown unused servers.
   ;; (eglot-report-progress nil) ;; Disable lsp server logs (Don't show lsp messages at the bottom, java)
-
-  ;; (eglot-workspace-configuration '(:ty (:diagnosticMode "off")))
-  ;; Here we dynamically compose the workspace configuration so I can
-  ;; turn things on and off as I want
-  (eglot-workspace-configuration
-   (defun local-eglot-workspace-configuration-function (server)
-     `(:ty
-       (:diagnosticMode ,cadair/ty-diagnostic-mode
-        :inlayHints (:variableTypes ,cadair/ty-inlay-hints
-                     :callArgumentNames ,cadair/ty-inlay-hints))
-       )
-     ))
   )
 
 (defun restart-eglot ()
@@ -1804,7 +1813,7 @@ Automatically narrows to the YAML section on activation."
               ("d" "Day Block Planning" entry (file+olp+datetree cadair-year-plan) (file "~/Notebooks/capture_templates/day_block.org") :empty-lines 1 :tree-type week :time-prompt t)
               ("w" "Week Block Planning" entry (file+olp cadair-year-plan "2026") (file "~/Notebooks/capture_templates/week_block.org") :empty-lines 1))))
 
-; Targets include this file and any file contributing to the agenda 
+; Targets include this file and any file contributing to the agenda
 (setq org-refile-targets (quote ((nil :maxlevel . 7)
                                  (org-agenda-files :maxlevel . 7))))
 
