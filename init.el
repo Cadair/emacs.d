@@ -1170,6 +1170,8 @@ Automatically narrows to the YAML section on activation."
 (use-package auctex
   :ensure t)
 
+(use-package just-ts-mode)
+
 (use-package magit
   :commands magit-status
   )

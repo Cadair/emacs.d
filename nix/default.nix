@@ -37,6 +37,7 @@
     htmlize
     indent-bars
     jinja2-mode
+    just-ts-mode
     magit
     marginalia
     mermaid-mode
