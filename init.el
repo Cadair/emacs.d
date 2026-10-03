@@ -42,7 +42,7 @@
 (use-package evil-collection
   :after evil
   :custom
-  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement))
+  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement agent-shell))
   :config
   (evil-collection-init)
   )
@@ -118,6 +118,7 @@
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
     "a e" '(cadair/ement-connect :wk "Matrix")
+    "a a" '(agent-shell :wk "Agent Shell")
     )
 
   (start/leader-keys
@@ -1413,6 +1414,20 @@ Automatically narrows to the YAML section on activation."
 (require 'vlf-setup)
 
 (use-package zeal-at-point)
+
+(use-package agent-shell
+  :commands (agent-shell agent-shell-opencode-start-agent)
+  :custom
+  ;; The opencode binary is installed as `jailed-opencode'.
+  (agent-shell-opencode-acp-command '("jailed-opencode" "acp"))
+  ;; Use `jailed-opencode auth login' (run once) for credentials.
+  (agent-shell-opencode-authentication
+   (agent-shell-opencode-make-authentication :none t))
+  ;; Inherit the parent Emacs environment so `jailed-opencode' is
+  ;; found by the spawned agent process.
+  ;;(agent-shell-opencode-environment
+  ;; (agent-shell-make-environment-variables :inherit-env t))
+)
 
 (setq cadair-year-plan
       (expand-file-name (format "~/Notebooks/%s.org"

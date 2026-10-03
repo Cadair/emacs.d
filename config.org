@@ -78,6 +78,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#eat---terminal][EAT - Terminal]]
   - [[#vlf][VLF]]
   - [[#zeal][Zeal]]
+  - [[#agent-shell][Agent Shell]]
 - [[#org-mode][Org Mode]]
   - [[#visuals][Visuals]]
   - [[#vertico-fixes][Vertico Fixes]]
@@ -184,7 +185,7 @@ Notes:
   (use-package evil-collection
     :after evil
     :custom
-    (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement))
+    (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement agent-shell))
     :config
     (evil-collection-init)
     )
@@ -264,6 +265,7 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
     "a e" '(cadair/ement-connect :wk "Matrix")
+    "a a" '(agent-shell :wk "Agent Shell")
     )
 
   (start/leader-keys
@@ -1916,6 +1918,30 @@ Add support for loading very large files
 #+begin_src emacs-lisp
 (use-package zeal-at-point)
 #+end_src
+
+** Agent Shell
+
+[[https://github.com/xenodium/agent-shell][agent-shell]] is a native Emacs shell for talking to LLM agents over the Agent Client Protocol (ACP).
+
+Here it is set up for [[https://opencode.ai][OpenCode]]. The OpenCode binary is installed (and on =PATH=) as =jailed-opencode=, so the ACP command is overridden accordingly. Authenticate once by running =jailed-opencode auth login= in a terminal.
+
+Evil bindings are provided by =evil-collection= (added to =evil-collection-mode-list= above), so no manual evil keymaps are needed.
+#+begin_src emacs-lisp
+(use-package agent-shell
+  :commands (agent-shell agent-shell-opencode-start-agent)
+  :custom
+  ;; The opencode binary is installed as `jailed-opencode'.
+  (agent-shell-opencode-acp-command '("jailed-opencode" "acp"))
+  ;; Use `jailed-opencode auth login' (run once) for credentials.
+  (agent-shell-opencode-authentication
+   (agent-shell-opencode-make-authentication :none t))
+  ;; Inherit the parent Emacs environment so `jailed-opencode' is
+  ;; found by the spawned agent process.
+  ;;(agent-shell-opencode-environment
+  ;; (agent-shell-make-environment-variables :inherit-env t))
+)
+#+end_src
+
 * Org Mode
 
 Orgy orgy org mode.

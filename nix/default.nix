@@ -7,6 +7,7 @@
   cfg = config.cadair.emacs;
   emacsPackages = (epkgs: with epkgs; [
     alert
+    agent-shell
     auctex
     blamer
     breadcrumb
