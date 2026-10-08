@@ -1209,8 +1209,6 @@ Automatically narrows to the YAML section on activation."
 
 (use-package blamer)
 
-(use-package devcontaner)
-
 (use-package corfu
   ;; Optional customizations
   :custom
@@ -1311,7 +1309,12 @@ Automatically narrows to the YAML section on activation."
  :hook
  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
 
-(use-package consult)
+(use-package consult
+  :init
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  )
 
 (use-package diminish)
 
@@ -2002,9 +2005,9 @@ Automatically narrows to the YAML section on activation."
 
 (use-package org-clock-float
   :requires (request)
-  :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
+  ;; :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
   ;; For local development
-  ;; :load-path "/home/stuart/Git/org-clock-float/"
+  :load-path "/home/stuart/Git/org-clock-float/"
   :config
   (org-clock-float-setup)
   :custom

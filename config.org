@@ -59,7 +59,6 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#language-modes][Language modes]]
 - [[#other-packages][Other Packages]]
   - [[#git][Git]]
-  - [[#devcontaner][Devcontaner]]
   - [[#corfu][Corfu]]
   - [[#cape][Cape]]
   - [[#orderless][Orderless]]
@@ -1617,10 +1616,6 @@ Creates URLs to forges
 #+end_src
 *** TODO igist
 https://github.com/KarimAziev/igist
-** Devcontaner
-#+begin_src emacs-lisp
-(use-package devcontaner)
-#+end_src
 ** Corfu
 Enhances in-buffer completion with a small completion popup.
 Corfu is a small package, which relies on the Emacs completion facilities and concentrates on providing a polished completion.
@@ -1761,7 +1756,12 @@ Recomended for packages like vertico, corfu.
 Provides search and navigation commands based on the Emacs completion function.
 Check out their [[https://github.com/minad/consult][git repository]] for more awesome functions.
 #+begin_src emacs-lisp
-(use-package consult)
+(use-package consult
+  :init
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  )
 #+end_src
 
 ** Diminish
@@ -2678,9 +2678,9 @@ I use [[https://github.com/Alexays/Waybar/][Waybar]] for my sway window manager,
 
    (use-package org-clock-float
      :requires (request)
-     :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
+     ;; :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
      ;; For local development
-     ;; :load-path "/home/stuart/Git/org-clock-float/"
+     :load-path "/home/stuart/Git/org-clock-float/"
      :config
      (org-clock-float-setup)
      :custom
