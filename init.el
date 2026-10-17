@@ -2154,6 +2154,14 @@ Automatically narrows to the YAML section on activation."
   (ement-connect :user-id "@cadair:cadair.com" :uri-prefix "http://localhost:8009")
   )
 
+(use-package mu4e
+  :custom
+  mu4e-sent-folder   "/Sent"       ;; folder for sent messages
+  mu4e-drafts-folder "/Drafts"     ;; unfinished messages
+  mu4e-trash-folder  "/Trash"      ;; trashed messages
+  mu4e-refile-folder "/Archive"    ;; archived messages
+)
+
 (defun thanos/wtype-text (text)
   "Process TEXT for wtype, handling newlines properly."
   (let* ((has-final-newline (string-match-p "\n$" text))

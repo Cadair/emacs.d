@@ -45,6 +45,7 @@
     marginalia
     mermaid-mode
     micromamba
+    mu4e
     mixed-pitch
     nerd-icons
     nerd-icons-completion

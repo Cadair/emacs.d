@@ -96,6 +96,7 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
   - [[#caldav][CalDAV]]
 - [[#matrix][Matrix]]
 - [[#other-things][Other things]]
+  - [[#email][Email]]
   - [[#emacs-everywhere][Emacs Everywhere]]
   - [[#new-client-frame][New Client Frame]]
 - [[#runtime-performance][Runtime Performance]]
@@ -2869,7 +2870,18 @@ Because *I can*.
 
 * Other things
 
+** Email
 
+
+#+begin_src emacs-lisp
+(use-package mu4e
+  :custom
+  mu4e-sent-folder   "/Sent"       ;; folder for sent messages
+  mu4e-drafts-folder "/Drafts"     ;; unfinished messages
+  mu4e-trash-folder  "/Trash"      ;; trashed messages
+  mu4e-refile-folder "/Archive"    ;; archived messages
+)
+#+end_src
 ** Emacs Everywhere
 
    The emacs everywhere package lets you use an emacs popup frame to edit text and then insert it into whatever application you have open.
