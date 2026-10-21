@@ -42,7 +42,7 @@
 (use-package evil-collection
   :after evil
   :custom
-  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement agent-shell))
+  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement agent-shell mu4e))
   :config
   (evil-collection-init)
   )
@@ -117,8 +117,9 @@
   (start/leader-keys
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
-    "a e" '(cadair/ement-connect :wk "Matrix")
+    "a m" '(cadair/ement-connect :wk "Matrix")
     "a a" '(agent-shell :wk "Agent Shell")
+    "a e" '(mu4e :wk "Email")
     )
 
   (start/leader-keys
@@ -394,6 +395,7 @@
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
+  (auth-source-pass-enable)
   :bind (
          ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
          )
@@ -2156,11 +2158,145 @@ Automatically narrows to the YAML section on activation."
 
 (use-package mu4e
   :custom
-  mu4e-sent-folder   "/Sent"       ;; folder for sent messages
-  mu4e-drafts-folder "/Drafts"     ;; unfinished messages
-  mu4e-trash-folder  "/Trash"      ;; trashed messages
-  mu4e-refile-folder "/Archive"    ;; archived messages
-)
+  (mu4e-get-mail-command "mbsync -a")
+  (mu4e-update-interval 300)
+  (mu4e-headers-auto-update t)
+  (mu4e-change-filenames-when-moving t)
+
+  ;; general emacs mail settings; used when composing e-mail
+  ;; the non-mu4e-* stuff is inherited from emacs/message-mode
+  (user-mail-address "stuart@cadair.com")
+  (user-full-name  "Stuart Mumford")
+
+  ;; Use msmtp configured by home-manager for sntp
+  (sendmail-program "msmtp")
+  (send-mail-function 'smtpmail-send-it)
+  (message-sendmail-f-is-evil t)
+  (message-sendmail-extra-arguments '("--read-envelope-from"))
+  (message-send-mail-function 'message-send-mail-with-sendmail)
+
+  ;; don't keep message buffers around
+  (message-kill-buffer-on-exit t)
+
+  (mu4e-context-policy 'pick-first)
+
+  ;; Bookmarks
+  (mu4e-maildir-shortcuts
+   '( (:maildir "/stuart@cadair.com/Inbox"     :key  ?c)
+      (:maildir "/stuart.mumford@aperiosoftware.com/Inbox"     :key  ?a)
+      (:maildir "/stuart@cadair.com/stuart-at-sunpy.org"   :key  ?s)
+      (:maildir "/stuart@cadair.com/stuart-at-mumford.me.uk"   :key  ?m)
+      (:maildir "/stuart@cadair.com/Python/astropy"   :key  ?y)))
+
+  (mu4e-bookmarks
+   '(
+     (:name "Inboxes" :query "(maildir:/Inbox/ OR maildir:/stuart@cadair.com/stuart-at-mumford.me OR maildir:/stuart@cadair.com/stuart-at-sunpy.org) AND NOT flag:trashed" :key ?i)
+     (:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?u)
+     (:name "Today's unprocessed messages" :query "date:today..now AND NOT maildir:/Archives/ and NOT flag:trashed" :key ?t)
+     (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
+     ))
+
+  :config
+  ;; Dynamic refile function to archive by year
+  (defun cadair/mu4e-archive-by-year (prefix msg)
+    (let ((base (string-remove-suffix "/" prefix)))
+      (concat (and (not (string-empty-p base)) base)
+              "/Archives/"
+              (format-time-string "%Y"
+                                  (or (mu4e-message-field msg :date)
+                                      (current-time))))))
+
+  ;; Refiling also marks the message as seen (instead of the default -N).
+  (setf (alist-get 'refile mu4e-marks)
+        (plist-put (alist-get 'refile mu4e-marks)
+                   :action
+                   (lambda (docid msg target)
+                     (mu4e--server-move docid
+                                         (mu4e--mark-check-target target)
+                                         "+S-u-N"))))
+
+  ;; Junk folder, switchable per mu4e-context.
+  (defvar mu4e-junk-folder "/Junk"
+    "Maildir for spam.  Overridden per mu4e-context via :vars.")
+
+  (setf (alist-get 'spam mu4e-marks)
+        (list :char "$"
+              :prompt "spam"
+              :dyn-target (lambda (_target msg) mu4e-junk-folder)
+              :action (lambda (docid msg target)
+                        (mu4e--server-move docid
+                                            (mu4e--mark-check-target target)
+                                            "+S-u-N"))))
+
+  (defun cadair/mu4e-mark-spam-action (msg)
+    "Mark MSG for spam (seen + move to junk) in the headers buffer."
+    (let ((docid (mu4e-message-field msg :docid)))
+      (with-current-buffer (mu4e-get-headers-buffer)
+        (save-excursion
+          (if (mu4e~headers-goto-docid docid)
+              (mu4e-mark-at-point 'spam nil)
+            (mu4e-warn "Message not found in headers buffer"))))))
+
+  (add-to-list 'mu4e-headers-actions '("junk" . cadair/mu4e-mark-spam-action) t)
+  (add-to-list 'mu4e-view-actions    '("junk" . cadair/mu4e-mark-spam-action) t)
+
+  ;; Contexts.
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "cadair"
+          :match-func (lambda (msg)
+                        (when msg
+                          (string-match-p "^/stuart@cadair.com"
+                                          (mu4e-message-field msg :maildir))))
+          :vars (list '(user-mail-address . "stuart@cadair.com")
+                      '(user-full-name    . "Stuart Mumford")
+                      '(mu4e-sent-folder   . "/stuart@cadair.com/Sent")
+                      '(mu4e-drafts-folder . "/stuart@cadair.com/Drafts")
+                      '(mu4e-trash-folder  . "/stuart@cadair.com/Trash")
+                      '(mu4e-junk-folder .   "/stuart@cadair.com/Junk")
+                      (cons 'mu4e-refile-folder
+                            (apply-partially #'cadair/mu4e-archive-by-year
+                                             "/stuart@cadair.com"))))
+         (make-mu4e-context
+          :name "aperio"
+          :match-func (lambda (msg)
+                        (when msg
+                          (string-match-p "^/stuart.mumford@aperiosoftware.com"
+                                          (mu4e-message-field msg :maildir))))
+          :vars (list '(user-mail-address           . "stuart.mumford@aperiosoftware.com")
+                      '(user-full-name              . "Stuart Mumford")
+                      '(message-user-organization  . "Aperio Software")
+                      '(mu4e-drafts-folder . "/stuart.mumford@aperiosoftware.com/Drafts")
+                      '(mu4e-sent-folder   . "/stuart.mumford@aperiosoftware.com/Sent")
+                      '(mu4e-trash-folder  . "/stuart.mumford@aperiosoftware.com/Trash")
+                      '(mu4e-junk-folder   . "/stuart.mumford@aperiosoftware.com/Junk")
+                      (cons 'mu4e-refile-folder
+                            (apply-partially #'cadair/mu4e-archive-by-year
+                                             "/stuart.mumford@aperiosoftware.com"))))
+         (make-mu4e-context
+          :name "sunpy"
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches msg :any "jsoc@sunpy.org")))
+          :vars (list '(user-mail-address . "stuart@sunpy.org")
+                      '(user-full-name    . "Stuart Mumford")
+                      (cons 'mu4e-refile-folder
+                            (apply-partially #'cadair/mu4e-archive-by-year
+                                             "/stuart@cadair.com/stuart-at-sunpy.org"))))
+         (make-mu4e-context
+          :name "mumford.me.uk"
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches
+                           msg :any "stuart@mumford.me.uk")))
+          :vars (list '(user-mail-address . "stuart@mumford.me.uk")
+                      '(user-full-name    . "Stuart Mumford")
+                      (cons 'mu4e-refile-folder
+                            (apply-partially #'cadair/mu4e-archive-by-year
+                                             "/stuart@cadair.com/stuart-at-mumford.me.uk"))))
+         ))
+  )
 
 (defun thanos/wtype-text (text)
   "Process TEXT for wtype, handling newlines properly."
