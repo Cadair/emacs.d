@@ -46,6 +46,7 @@
     mermaid-mode
     micromamba
     mixed-pitch
+    mu4e
     nerd-icons
     nerd-icons-completion
     nerd-icons-completion
