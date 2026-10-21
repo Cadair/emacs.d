@@ -16,6 +16,7 @@
     consult
     consult-eglot
     consult-gh
+    consult-gh-forge
     corfu
     dape
     dashboard
