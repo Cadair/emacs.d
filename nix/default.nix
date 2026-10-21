@@ -15,6 +15,7 @@
     cape
     consult
     consult-eglot
+    consult-gh
     corfu
     dape
     dashboard
@@ -52,6 +53,7 @@
     nerd-icons-ibuffer
     nix-ts-mode
     orderless
+    org-msg
     org-modern
     ox-reveal
     project

@@ -1209,6 +1209,17 @@ Automatically narrows to the YAML section on activation."
 
 (use-package blamer)
 
+(use-package consult-gh
+  :after consult)
+(use-package consult-gh-forge
+  :after consult-gh
+  :config
+  (consult-gh-forge-mode +1))
+;; (use-package consult-gh-embark
+;;   :after consult-gh
+;;   :config
+;;   (consult-gh-embark-mode +1))
+
 (use-package corfu
   ;; Optional customizations
   :custom

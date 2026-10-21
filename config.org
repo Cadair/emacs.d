@@ -1616,6 +1616,19 @@ Creates URLs to forges
 #+end_src
 *** TODO igist
 https://github.com/KarimAziev/igist
+*** consult-gh
+#+begin_src emacs-lisp
+(use-package consult-gh
+  :after consult)
+(use-package consult-gh-forge
+  :after consult-gh
+  :config
+  (consult-gh-forge-mode +1))
+;; (use-package consult-gh-embark
+;;   :after consult-gh
+;;   :config
+;;   (consult-gh-embark-mode +1))
+#+end_src
 ** Corfu
 Enhances in-buffer completion with a small completion popup.
 Corfu is a small package, which relies on the Emacs completion facilities and concentrates on providing a polished completion.
