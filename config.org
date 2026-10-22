@@ -2894,7 +2894,11 @@ Because *I can*.
 
 
 #+begin_src emacs-lisp
+(use-package org-msg
+  :after mu4e)
 
+(use-package mu4e-contrib
+  :after mu4e)
 (use-package mu4e
   :custom
   (mu4e-get-mail-command "mbsync -a")
@@ -2906,6 +2910,7 @@ Because *I can*.
   ;; the non-mu4e-* stuff is inherited from emacs/message-mode
   (user-mail-address "stuart@cadair.com")
   (user-full-name  "Stuart Mumford")
+  (mail-user-agent 'mu4e-user-agent)
 
   ;; Use msmtp configured by home-manager for sntp
   (sendmail-program "msmtp")
@@ -2918,6 +2923,8 @@ Because *I can*.
   (message-kill-buffer-on-exit t)
 
   (mu4e-context-policy 'pick-first)
+  (mu4e-attachment-dir "~/Downloads/")
+  (mu4e-notification-support t)
 
   ;; Bookmarks
   (mu4e-maildir-shortcuts
@@ -2929,9 +2936,10 @@ Because *I can*.
 
   (mu4e-bookmarks
    '(
-     (:name "Inboxes" :query "(maildir:/Inbox/ OR maildir:/stuart@cadair.com/stuart-at-mumford.me OR maildir:/stuart@cadair.com/stuart-at-sunpy.org) AND NOT flag:trashed" :key ?i)
+     (:name "Inboxes" :query "(maildir:/Inbox/ OR maildir:/stuart@cadair.com/stuart-at-mumford.me OR maildir:/stuart@cadair.com/stuart-at-sunpy.org) AND NOT flag:trashed AND NOT flag:flagged" :key ?i)
+     (:name "Starred (TODO)" :query "flag:flagged" :key ?s)
      (:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?u)
-     (:name "Today's unprocessed messages" :query "date:today..now AND NOT maildir:/Archives/ and NOT flag:trashed" :key ?t)
+     (:name "Today's unprocessed messages" :query "date:today..now AND NOT maildir:/Archives/ AND NOT maildir:/Junk/ and NOT flag:trashed" :key ?t)
      (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
      ))
 
