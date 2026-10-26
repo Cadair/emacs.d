@@ -56,6 +56,7 @@
     nerd-icons-ibuffer
     nix-ts-mode
     orderless
+    org-caldav
     org-msg
     org-modern
     ox-reveal
