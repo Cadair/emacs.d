@@ -1726,7 +1726,7 @@ Automatically narrows to the YAML section on activation."
 ;; All my org files live in one directory
 (setq org-directory "~/Notebooks/")
 (setq cadair-default-org-files (file-expand-wildcards "~/Notebooks/*.org"))
-(setq cadair-extra-org-files '())
+(setq cadair-extra-org-files (file-expand-wildcards "~/Notebooks/calendars/*.org"))
 
 ;; Some general config
 (setq org-duration-format 'h:mm)
@@ -2149,6 +2149,22 @@ Automatically narrows to the YAML section on activation."
     (let ((link (concat "file:" file "::*" heading)))
       (insert (concat "[[" link "][" heading "]]")))))
 
+(use-package org-caldav
+  :custom
+  ;; URL of the caldav server
+  (org-caldav-url "https://radicale.home.cadair.com/stuart")
+  ;; calendar ID on server
+  (org-caldav-calendar-id "692c4c9b-ca2d-eab0-5537-598f49a7da7c")
+  ;; Org filename where new entries from calendar stored
+  (org-caldav-inbox (concat org-directory "calendars/aperio-inbox.org"))
+  ;; Additional Org files to check for calendar events
+  (org-caldav-files nil)
+  ;; Usually a good idea to set the timezone manually
+  (org-icalendar-timezone "Europe/London")
+  ;; Save sync state next to the notebooks
+  (org-caldav-save-directory (concat org-directory "calendars"))
+  )
+
 (use-package ement)
 
 (defun cadair/ement-connect ()
@@ -2157,7 +2173,16 @@ Automatically narrows to the YAML section on activation."
   )
 
 (use-package org-msg
-  :after mu4e)
+  :after mu4e
+  :custom
+  (org-msg-startup "hidestars indent inlineimages")
+  (org-msg-greeting-fmt "\nHi%s,\n\n")
+  (org-msg-convert-citation t)
+  :config
+  (setq org-msg-default-alternatives '((new           . (text html))
+                                       (reply-to-html   . (text html))
+                                       (reply-to-text   . (text))))
+  (org-msg-mode))
 
 (use-package mu4e-contrib
   :after mu4e)
