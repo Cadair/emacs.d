@@ -2018,14 +2018,11 @@ Automatically narrows to the YAML section on activation."
 
 (use-package org-clock-float
   :requires (request)
-  ;; :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
+  :vc (:url "https://github.com/Cadair/org-clock-float.git" :rev :latest)
   ;; For local development
-  :load-path "/home/stuart/Git/org-clock-float/"
+  ;; :load-path "/home/stuart/Git/org-clock-float/"
   :config
   (org-clock-float-setup)
-  :custom
-  (org-clock-float-email (plist-get (nth 0 (auth-source-search :max 1 :host "api.float.com")) :user))
-  (org-clock-float-api-token (auth-info-password (nth 0 (auth-source-search :max 1 :host "api.float.com"))))
   )
 
 (defun cadair/org-open-year-and-jump-to-today-plan ()
