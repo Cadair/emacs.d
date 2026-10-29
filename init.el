@@ -26,6 +26,8 @@
   :config ;; Execute code After a package is loaded
   (evil-set-initial-state 'eat-mode 'insert) ;; Set initial state in eat terminal to insert mode
   (evil-set-initial-state 'org-agenda-mode 'normal)  ;; Use normal mode (not emacs) in agenda
+  (setq-default evil-kill-on-visual-paste nil)
+
   :custom ;; Customization of package custom variables
   (evil-want-keybinding nil)    ;; Disable evil bindings in other modes (It's not consistent and not good)
   (evil-want-C-u-scroll nil)    ;; Do not set C-u to scroll up
