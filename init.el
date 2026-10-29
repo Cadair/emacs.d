@@ -1726,7 +1726,8 @@ Automatically narrows to the YAML section on activation."
 ;; All my org files live in one directory
 (setq org-directory "~/Notebooks/")
 (setq cadair-default-org-files (file-expand-wildcards "~/Notebooks/*.org"))
-(setq cadair-extra-org-files (file-expand-wildcards "~/Notebooks/calendars/*.org"))
+;; (setq cadair-extra-org-files (file-expand-wildcards "~/Notebooks/calendars/*.org"))
+(setq cadair-extra-org-files ())
 
 ;; Some general config
 (setq org-duration-format 'h:mm)
