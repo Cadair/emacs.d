@@ -2152,8 +2152,8 @@ Automatically narrows to the YAML section on activation."
 
 (use-package khalel
   :after org
-  :config
-  (khalel-add-capture-templates)
+  :custom
+  (org-caldav-inbox (concat org-directory "calendars/aperio.org"))
 )
 
 ;;(use-package org-caldav

@@ -2859,8 +2859,8 @@ This helper is a way of inserting links to other org headings quickly, so I can 
 #+begin_src emacs-lisp
 (use-package khalel
   :after org
-  :config
-  (khalel-add-capture-templates)
+  :custom
+  (org-caldav-inbox (concat org-directory "calendars/aperio.org"))
 )
 #+end_src
 
