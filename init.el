@@ -2160,6 +2160,10 @@ Automatically narrows to the YAML section on activation."
   (khalel-add-capture-template)
 )
 
+(use-package khalel-icalendar
+  :after mu4e
+)
+
 (use-package ement)
 
 (defun cadair/ement-connect ()

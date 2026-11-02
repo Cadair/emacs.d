@@ -2866,6 +2866,10 @@ This helper is a way of inserting links to other org headings quickly, so I can 
   :config
   (khalel-add-capture-template)
 )
+
+(use-package khalel-icalendar
+  :after mu4e
+)
 #+end_src
 
 * Matrix
