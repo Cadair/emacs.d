@@ -2856,6 +2856,14 @@ This helper is a way of inserting links to other org headings quickly, so I can 
 
 ** TODO CalDAV
 
+#+begin_src emacs-lisp
+(use-package khalel
+  :after org
+  :config
+  (khalel-add-capture-templates)
+)
+#+end_src
+
 https://jackkamm.neocities.org/org-caldav-manual/
 #+begin_src emacs-lisp
 ;;(use-package org-caldav

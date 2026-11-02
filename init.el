@@ -35,6 +35,7 @@
   (evil-undo-system 'undo-redo) ;; C-r to redo
   (org-return-follows-link t)   ;; Sets RETURN key in org-mode to follow links
 
+
   ;; Unmap keys in 'evil-maps. If not done, org-return-follows-link will not work
   :bind (:map evil-motion-state-map
               ("SPC" . nil)
@@ -2148,6 +2149,12 @@ Automatically narrows to the YAML section on activation."
     ;; Create the link string directly
     (let ((link (concat "file:" file "::*" heading)))
       (insert (concat "[[" link "][" heading "]]")))))
+
+(use-package khalel
+  :after org
+  :config
+  (khalel-add-capture-templates)
+)
 
 ;;(use-package org-caldav
 ;;  :custom

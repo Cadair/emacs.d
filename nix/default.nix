@@ -41,6 +41,7 @@
     indent-bars
     jinja2-mode
     just-ts-mode
+    khalel
     magit
     marginalia
     mermaid-mode
