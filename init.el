@@ -1730,7 +1730,6 @@ Automatically narrows to the YAML section on activation."
 (setq org-directory "~/Notebooks/")
 (setq cadair-default-org-files (file-expand-wildcards "~/Notebooks/*.org"))
 (setq cadair-extra-org-files (file-expand-wildcards "~/Notebooks/calendars/*.org"))
-(setq cadair-extra-org-files ())
 
 ;; Some general config
 (setq org-duration-format 'h:mm)
@@ -2154,6 +2153,11 @@ Automatically narrows to the YAML section on activation."
   :after org
   :custom
   (org-caldav-inbox (concat org-directory "calendars/aperio.org"))
+  (khalel-capture-key "e")
+  (khalel-import-org-file-confirm-overwrite nil)
+  (khalel-import-end-date "+30d")
+  :config
+  (khalel-add-capture-template)
 )
 
 (use-package ement)
