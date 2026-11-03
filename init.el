@@ -119,9 +119,9 @@
 
   (start/leader-keys
     "a" '(:ignore t :wk "Applications")
-    "a r" '(ranger :wk "Ranger")
-    "a m" '(cadair/ement-connect :wk "Matrix")
+    "a c" '(cadair/open-calendar :wk "Calendar")
     "a e" '(mu4e :wk "Email")
+    "a r" '(ranger :wk "Ranger")
     )
 
   (start/leader-keys
@@ -2135,7 +2135,7 @@ Automatically narrows to the YAML section on activation."
 (use-package calfw-org
   :custom
   (calfw-org-agenda-schedule-args '(:timestamp))
-  (calfw-org-overwrite-default-keybinding t)
+  ;; (calfw-org-overwrite-default-keybinding t)
   :config
   (setq calfw-fchar-junction ?╋
         calfw-fchar-vertical-line ?┃
@@ -2146,6 +2146,14 @@ Automatically narrows to the YAML section on activation."
         calfw-fchar-top-left-corner ?┏
         calfw-fchar-top-right-corner ?┓)
 )
+(defun cadair/open-calendar ()
+  (interactive)
+  (calfw-open-calendar-buffer
+   :contents-sources
+   (list
+    (calfw-org-create-source cadair-default-org-files "org-agenda" "Green")  ; orgmode source from org-agenda files
+    (calfw-org-create-source (list (concat org-directory "calendars/aperio-cal.org")) "Work" "Blue")  ; orgmode source from org-agenda files
+   )))
 
 (use-package org-msg
   :after mu4e
