@@ -2132,6 +2132,21 @@ Automatically narrows to the YAML section on activation."
   :after mu4e
 )
 
+(use-package calfw-org
+  :custom
+  (calfw-org-agenda-schedule-args '(:timestamp))
+  (calfw-org-overwrite-default-keybinding t)
+  :config
+  (setq calfw-fchar-junction ?╋
+        calfw-fchar-vertical-line ?┃
+        calfw-fchar-horizontal-line ?━
+        calfw-fchar-left-junction ?┣
+        calfw-fchar-right-junction ?┫
+        calfw-fchar-top-junction ?┯
+        calfw-fchar-top-left-corner ?┏
+        calfw-fchar-top-right-corner ?┓)
+)
+
 (use-package org-msg
   :after mu4e
   :custom

@@ -11,7 +11,7 @@
     blamer
     breadcrumb
     browse-kill-ring
-    calfw
+    calfw-org
     cape
     consult
     consult-eglot
