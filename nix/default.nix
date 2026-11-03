@@ -20,7 +20,6 @@
     corfu
     dape
     dashboard
-    devcontainer
     diff-hl
     diminish
     doom-modeline
@@ -125,8 +124,6 @@ in {
       harper
       # mermaid
       mermaid-cli
-      # devcontainer
-      devcontainer
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [
       wtype
     ];
