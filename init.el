@@ -50,6 +50,25 @@
   (evil-collection-init)
   )
 
+(defun cadair/keyboard-escape-quit-adv (fn)
+  (let ((buffer-quit-function (or buffer-quit-function #'keyboard-quit)))
+    (funcall fn)))
+(advice-add #'keyboard-escape-quit :around #'cadair/keyboard-escape-quit-adv)
+
+(defun cadair/esc-quits-compilation ()
+  (dolist (state '(motion normal))
+    (evil-local-set-key state (kbd "<escape>") #'quit-window)))
+
+(add-hook 'compilation-mode-hook #'cadair/esc-quits-compilation)
+
+(with-eval-after-load 'python-pytest
+  (general-define-key
+   :keymaps '(python-pytest-mode-map
+              python-pytest-finished-mode-map
+              compilation-mode-map)
+   :states '(motion normal)
+   "<escape>" 'quit-window))
+
 (use-package general
   :config
   (general-evil-setup)
@@ -69,13 +88,6 @@
 
    "<up>" 'comint-previous-input
    "<down>" 'comint-next-input
-   )
-
-  (general-define-key
-   :keymaps 'compilation-mode-map
-   :states 'motion
-
-   "<escape>" 'quit-window
    )
 
   (general-define-key
@@ -453,7 +465,7 @@
 ;; If you try and open a new buffer in a dediated window put it somewhere else
 (setq switch-to-buffer-in-dedicated-window "pop")
 
-;; an interactive function for setting a buffer as dediated
+;; an interactive function for setting a buffer as dedicated
 (defun toggle-window-dedication ()
   "Toggles window dedication in the selected window."
   (interactive)
@@ -462,7 +474,7 @@
 
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output t)
-(setq compile-command "tox -e py313")
+(setq compile-command "tox -e py314")
 
 ;;  (use-package gruvbox-theme
 ;;    :config
@@ -881,6 +893,11 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
      ]
     )
   )
+
+(add-to-list 'display-buffer-alist
+             '("\\`\\*pytest\\*"
+               (display-buffer-below-selected)
+               (window-height . 0.33)))
 
 (use-package flymake-ruff
   :ensure t
@@ -2133,8 +2150,8 @@ Automatically narrows to the YAML section on activation."
 )
 
 (use-package calfw-org
-  :custom
-  (calfw-org-agenda-schedule-args '(:timestamp))
+  ;; :custom
+  ;; (calfw-org-agenda-schedule-args '(:timestamp))
   ;; (calfw-org-overwrite-default-keybinding t)
   :config
   (setq calfw-fchar-junction ?╋

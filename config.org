@@ -191,7 +191,39 @@ Notes:
       (evil-collection-init)
       )
   #+end_src
+**** Escape key behaviour
 
+I don't ever want the escape key (through ~keyboard-escape-quit~) to
+destroy my window layout, I want it to close the window. So advise
+~keyboard-escape-quit~ so that there's always a ~buffer-quit-function~
+defined.
+
+#+begin_src emacs-lisp
+(defun cadair/keyboard-escape-quit-adv (fn)
+  (let ((buffer-quit-function (or buffer-quit-function #'keyboard-quit)))
+    (funcall fn)))
+(advice-add #'keyboard-escape-quit :around #'cadair/keyboard-escape-quit-adv)
+#+end_src
+
+Now for compilation buffers make sure that escape actually kills the window
+#+begin_src emacs-lisp
+(defun cadair/esc-quits-compilation ()
+  (dolist (state '(motion normal))
+    (evil-local-set-key state (kbd "<escape>") #'quit-window)))
+
+(add-hook 'compilation-mode-hook #'cadair/esc-quits-compilation)
+#+end_src
+
+And for pytest buffers make sure that escape (including while it's running) also quits
+#+begin_src emacs-lisp
+(with-eval-after-load 'python-pytest
+  (general-define-key
+   :keymaps '(python-pytest-mode-map
+              python-pytest-finished-mode-map
+              compilation-mode-map)
+   :states '(motion normal)
+   "<escape>" 'quit-window))
+#+end_src
 * Keybindings
 A keybinding framework to set keybindings easily. Uses https://github.com/noctuid/general.el
 #+begin_src emacs-lisp
@@ -214,13 +246,6 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
 
    "<up>" 'comint-previous-input
    "<down>" 'comint-next-input
-   )
-
-  (general-define-key
-   :keymaps 'compilation-mode-map
-   :states 'motion
-
-   "<escape>" 'quit-window
    )
 
   (general-define-key
@@ -624,7 +649,7 @@ This is based off reading this tutorial: https://www.masteringemacs.org/article/
 ;; If you try and open a new buffer in a dediated window put it somewhere else
 (setq switch-to-buffer-in-dedicated-window "pop")
 
-;; an interactive function for setting a buffer as dediated
+;; an interactive function for setting a buffer as dedicated
 (defun toggle-window-dedication ()
   "Toggles window dedication in the selected window."
   (interactive)
@@ -638,7 +663,7 @@ This is based off reading this tutorial: https://www.masteringemacs.org/article/
    #+begin_src emacs-lisp
    (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
    (setq compilation-scroll-output t)
-   (setq compile-command "tox -e py313")
+   (setq compile-command "tox -e py314")
    #+end_src
 
 * Appearance
@@ -1190,6 +1215,13 @@ Enable the excellent pytest package, and setup an extra hook for [[https://githu
      ]
     )
   )
+#+END_SRC
+Control how the pytest buffer is displayed, we split it into a small window below the current buffer.
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\`\\*pytest\\*"
+               (display-buffer-below-selected)
+               (window-height . 0.33)))
 #+end_src
 
 Finally, setup the flymake-ruff package, to have ruff checks outside of eglot.
@@ -2829,8 +2861,8 @@ This helper is a way of inserting links to other org headings quickly, so I can 
 )
 
 (use-package calfw-org
-  :custom
-  (calfw-org-agenda-schedule-args '(:timestamp))
+  ;; :custom
+  ;; (calfw-org-agenda-schedule-args '(:timestamp))
   ;; (calfw-org-overwrite-default-keybinding t)
   :config
   (setq calfw-fchar-junction ?╋
