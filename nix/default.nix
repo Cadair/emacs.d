@@ -7,11 +7,11 @@
   cfg = config.cadair.emacs;
   emacsPackages = (epkgs: with epkgs; [
     alert
-    agent-shell
     auctex
     blamer
     breadcrumb
     browse-kill-ring
+    calfw
     cape
     consult
     consult-eglot
@@ -25,7 +25,6 @@
     doom-modeline
     eat
     eglot
-    ement
     evil
     evil-collection
     evil-nerd-commenter
@@ -45,7 +44,6 @@
     marginalia
     mermaid-mode
     micromamba
-    mu4e
     mixed-pitch
     mu4e
     nerd-icons
@@ -57,8 +55,8 @@
     nix-ts-mode
     orderless
     org-caldav
-    org-msg
     org-modern
+    org-msg
     ox-reveal
     project
     python-black
@@ -78,7 +76,6 @@
     toc-org
     tree-sitter
     tree-sitter-langs
-    treesit-fold
     treemacs
     treemacs-evil
     treemacs-magit

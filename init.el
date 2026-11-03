@@ -45,7 +45,7 @@
 (use-package evil-collection
   :after evil
   :custom
-  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement agent-shell mu4e))
+  (evil-collection-mode-list '(dired ibuffer magit forge corfu vertico consult dashboard org ediff ement mu4e))
   :config
   (evil-collection-init)
   )
@@ -121,7 +121,6 @@
     "a" '(:ignore t :wk "Applications")
     "a r" '(ranger :wk "Ranger")
     "a m" '(cadair/ement-connect :wk "Matrix")
-    "a a" '(agent-shell :wk "Agent Shell")
     "a e" '(mu4e :wk "Email")
     )
 
