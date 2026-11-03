@@ -671,49 +671,26 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (tab-bar-new-tab-choice "*scratch*")
   )
 
-;; This block is needed for newer (2026) consult, which isn't in nixpkgs stable yet
 ;; Filter Buffers for Consult-Buffer (new consult)
-;; (with-eval-after-load 'consult
-;;   ;; Hide full buffer list (still available with "b" prefix)
-;;   (plist-put consult-source-buffer :hidden t)
-;;   (plist-put consult-source-buffer :default nil)
-
-;;   ;; set consult-workspace buffer list
-;;   (defvar consult--source-workspace
-;;     (list :name     "Workspace Buffers"
-;;           :narrow   ?w
-;;           :history  'buffer-name-history
-;;           :category 'buffer
-;;           :state    #'consult--buffer-state
-;;           :default  t
-;;           :items    (lambda () (consult--buffer-query
-;;                            :predicate #'tabspaces--local-buffer-p
-;;                            :sort 'visibility
-;;                            :as #'buffer-name)))
-;;     "Set workspace buffer list for consult-buffer.")
-;;   (add-to-list 'consult-buffer-sources 'consult--source-workspace))
-
-
-;; Filter Buffers for Consult-Buffer (old consult)
-
 (with-eval-after-load 'consult
-;; hide full buffer list (still available with "b" prefix)
-(consult-customize consult--source-buffer :hidden t :default nil)
-;; set consult-workspace buffer list
-(defvar consult--source-workspace
-  (list :name     "Workspace Buffers"
-        :narrow   ?w
-        :history  'buffer-name-history
-        :category 'buffer
-        :state    #'consult--buffer-state
-        :default  t
-        :items    (lambda () (consult--buffer-query
-                         :predicate #'tabspaces--local-buffer-p
-                         :sort 'visibility
-                         :as #'buffer-name)))
+  ;; Hide full buffer list (still available with "b" prefix)
+  (plist-put consult-source-buffer :hidden t)
+  (plist-put consult-source-buffer :default nil)
 
-  "Set workspace buffer list for consult-buffer.")
-(add-to-list 'consult-buffer-sources 'consult--source-workspace))
+  ;; set consult-workspace buffer list
+  (defvar consult--source-workspace
+    (list :name     "Workspace Buffers"
+          :narrow   ?w
+          :history  'buffer-name-history
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :default  t
+          :items    (lambda () (consult--buffer-query
+                           :predicate #'tabspaces--local-buffer-p
+                           :sort 'visibility
+                           :as #'buffer-name)))
+    "Set workspace buffer list for consult-buffer.")
+  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
 
 (defun get-python-env-root ()
   "Return the value of `python-shell-virtualenv-root` if defined, otherwise nil."
@@ -1433,20 +1410,6 @@ Automatically narrows to the YAML section on activation."
 (require 'vlf-setup)
 
 (use-package zeal-at-point)
-
-(use-package agent-shell
-  :commands (agent-shell agent-shell-opencode-start-agent)
-  :custom
-  ;; The opencode binary is installed as `jailed-opencode'.
-  (agent-shell-opencode-acp-command '("jailed-opencode" "acp"))
-  ;; Use `jailed-opencode auth login' (run once) for credentials.
-  (agent-shell-opencode-authentication
-   (agent-shell-opencode-make-authentication :none t))
-  ;; Inherit the parent Emacs environment so `jailed-opencode' is
-  ;; found by the spawned agent process.
-  ;;(agent-shell-opencode-environment
-  ;; (agent-shell-make-environment-variables :inherit-env t))
-)
 
 (setq cadair-year-plan
       (expand-file-name (format "~/Notebooks/%s.org"
@@ -2170,13 +2133,6 @@ Automatically narrows to the YAML section on activation."
   :after mu4e
 )
 
-(use-package ement)
-
-(defun cadair/ement-connect ()
-  (interactive)
-  (ement-connect :user-id "@cadair:cadair.com" :uri-prefix "http://localhost:8009")
-  )
-
 (use-package org-msg
   :after mu4e
   :custom
@@ -2185,12 +2141,13 @@ Automatically narrows to the YAML section on activation."
   (org-msg-convert-citation t)
   :config
   (setq org-msg-default-alternatives '((new           . (text html))
-                                       (reply-to-html   . (text html))
-                                       (reply-to-text   . (text))))
+                                       (reply-to-html . (text html))
+                                       (reply-to-text . (text))))
   (org-msg-mode))
 
 (use-package mu4e-contrib
   :after mu4e)
+
 (use-package mu4e
   :custom
   (mu4e-get-mail-command "mbsync -a")
