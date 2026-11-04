@@ -1221,7 +1221,7 @@ Control how the pytest buffer is displayed, we split it into a small window belo
 (add-to-list 'display-buffer-alist
              '("\\`\\*pytest\\*"
                (display-buffer-reuse-window
-                display-buffer-below-selected)
+                display-buffer-in-side-window)
                (window-height . 0.4)
                (dedicated . t)))
 #+end_src

@@ -897,7 +897,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (add-to-list 'display-buffer-alist
              '("\\`\\*pytest\\*"
                (display-buffer-reuse-window
-                display-buffer-below-selected)
+                display-buffer-in-side-window)
                (window-height . 0.4)
                (dedicated . t)))
 
