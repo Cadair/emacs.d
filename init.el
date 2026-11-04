@@ -896,8 +896,10 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 
 (add-to-list 'display-buffer-alist
              '("\\`\\*pytest\\*"
-               (display-buffer-below-selected)
-               (window-height . 0.33)))
+               (display-buffer-reuse-window
+                display-buffer-below-selected)
+               (window-height . 0.4)
+               (dedicated . t)))
 
 (use-package flymake-ruff
   :ensure t

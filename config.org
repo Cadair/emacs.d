@@ -1220,8 +1220,10 @@ Control how the pytest buffer is displayed, we split it into a small window belo
 #+begin_src emacs-lisp
 (add-to-list 'display-buffer-alist
              '("\\`\\*pytest\\*"
-               (display-buffer-below-selected)
-               (window-height . 0.33)))
+               (display-buffer-reuse-window
+                display-buffer-below-selected)
+               (window-height . 0.4)
+               (dedicated . t)))
 #+end_src
 
 Finally, setup the flymake-ruff package, to have ruff checks outside of eglot.
