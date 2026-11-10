@@ -911,6 +911,8 @@ First setup project.el
 (use-package project
   :custom
   (project-switch-commands 'project-find-file)  ;; Always open find file after switching project
+  :config
+  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
   )
 #+END_SRC
 

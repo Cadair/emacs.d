@@ -662,6 +662,8 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (use-package project
   :custom
   (project-switch-commands 'project-find-file)  ;; Always open find file after switching project
+  :config
+  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
   )
 
 (use-package tab-bar
