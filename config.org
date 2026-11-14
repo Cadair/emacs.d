@@ -36,7 +36,6 @@ The repo is also a flake, so if you are mad enough to want to use this you can i
 - [[#good-defaults-emacs-settings][Good Defaults (Emacs Settings)]]
   - [[#tabs-are-evil][Tabs are Evil]]
   - [[#ediff][EDiff]]
-  - [[#nix-environment-hackery][nix environment hackery]]
   - [[#window-management][Window management]]
   - [[#compilation-mode][Compilation Mode]]
 - [[#appearance][Appearance]]
@@ -623,15 +622,6 @@ A keybinding framework to set keybindings easily. Uses https://github.com/noctui
  ediff-window-setup-function #'ediff-setup-windows-plain
  )
 #+end_src
-
-** nix environment hackery
-   #+begin_src emacs-lisp
-;; (setenv "LD_LIBRARY_PATH" (concat (getenv "LD_LIBRARY_PATH") (concat ":" (getenv "NIX_LD_LIBRARY_PATH"))))
-;;(setenv "PATH" (concat (getenv "PATH") ":/run/current-system/sw/bin/:/home/stuart/.nix-profile/bin/"))
-;;(setq exec-path (append exec-path '("/run/current-system/sw/bin/")))
-;;(setq exec-path (append exec-path '("/home/stuart/.nix-profile/bin/")))
-   #+end_src
-
 ** Window management
 
 Tweaks and customisations to emacs' window management.

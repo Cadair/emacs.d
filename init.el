@@ -454,11 +454,6 @@
  ediff-window-setup-function #'ediff-setup-windows-plain
  )
 
-;; (setenv "LD_LIBRARY_PATH" (concat (getenv "LD_LIBRARY_PATH") (concat ":" (getenv "NIX_LD_LIBRARY_PATH"))))
-;;(setenv "PATH" (concat (getenv "PATH") ":/run/current-system/sw/bin/:/home/stuart/.nix-profile/bin/"))
-;;(setq exec-path (append exec-path '("/run/current-system/sw/bin/")))
-;;(setq exec-path (append exec-path '("/home/stuart/.nix-profile/bin/")))
-
 ;; Make manual buffer commands obey the rules
 (setq switch-to-buffer-obey-display-actions t)
 
